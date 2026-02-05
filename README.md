@@ -52,6 +52,33 @@ make terminal
 ./bin/scheduler_terminal -a 4 -q 2 -s -r # Round Robin, quantum=2, sample data, auto-run
 ```
 
+### 🌐 Option 3: Hosted Demo (No Installation Required)
+
+Try the CPU Scheduling Visualizer instantly using the hosted web version:
+
+👉 **Live Demo:** https://cpu-scheduling-visualizer-zeta.vercel.app/
+
+**What you can do in the hosted version:**
+- ▶️ Run all supported scheduling algorithms (FCFS, SJF, SRTF, Priority, Round Robin, LJF, LRTF)
+- 🧩 Add and modify processes (Arrival Time, Burst Time, Priority)
+- 📊 View real-time Gantt charts and process state transitions
+- 📈 Analyze performance metrics:
+  - Average Waiting Time  
+  - Average Turnaround Time  
+  - Average Response Time  
+  - CPU Utilization  
+  - Throughput
+- 🎨 Interactive, responsive UI optimized for desktop and mobile
+
+**Best for:**
+- 📚 Quick demonstrations and OS lab presentations  
+- 🧪 Testing scheduling algorithms without local setup  
+- 🧑‍🏫 Teaching CPU scheduling concepts visually  
+- 🚀 Sharing with peers or instructors via a single link  
+
+> ⚠️ **Note:** Terminal Mode and low-level debugging features are only available in the local build.  
+> For full functionality (WebAssembly build control + terminal UI), use **Option 1 (Web Mode)** or **Option 2 (Terminal Mode)**.
+
 ---
 
 ## 📋 Prerequisites
