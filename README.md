@@ -70,12 +70,6 @@ Try the CPU Scheduling Visualizer instantly using the hosted web version:
   - Throughput
 - 🎨 Interactive, responsive UI optimized for desktop and mobile
 
-**Best for:**
-- 📚 Quick demonstrations and OS lab presentations  
-- 🧪 Testing scheduling algorithms without local setup  
-- 🧑‍🏫 Teaching CPU scheduling concepts visually  
-- 🚀 Sharing with peers or instructors via a single link  
-
 > ⚠️ **Note:** Terminal Mode and low-level debugging features are only available in the local build.  
 > For full functionality (WebAssembly build control + terminal UI), use **Option 1 (Web Mode)** or **Option 2 (Terminal Mode)**.
 
