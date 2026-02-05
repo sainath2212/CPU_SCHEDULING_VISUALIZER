@@ -171,7 +171,7 @@ npm run dev -- --port 3001
 
 ## 📄 License
 
-MIT License - feel free to use this for educational purposes!
+MIT License -feel free to use this for educational purposes!
 
 ---
 
