@@ -1,16 +1,182 @@
-# React + Vite
+# CPU Scheduling Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A real-time, interactive CPU scheduling simulator built with **React**, **Vite**, and **WebAssembly (C)**. Visualize how different scheduling algorithms work, including FCFS, SJF, SRTF, Priority, Round Robin, LJF, and LRTF.
 
-Currently, two official plugins are available:
+![CPU Scheduler](https://img.shields.io/badge/Built_with-WebAssembly-blueviolet) ![React](https://img.shields.io/badge/Frontend-React-blue) ![Vite](https://img.shields.io/badge/Bundler-Vite-yellow)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Quick Start
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### One-Command Installation & Run
 
-## Expanding the ESLint configuration
+```bash
+./install.sh
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This script will:
+1. ✅ Check for and install **Homebrew** (macOS only)
+2. ✅ Check for and install **Node.js**
+3. ✅ Check for and install **Emscripten** (for WebAssembly compilation)
+4. ✅ Install all Node.js dependencies (`npm install`)
+5. ✅ Build the WebAssembly module (`make`)
+6. ✅ Start the development server (`npm run dev`)
+
+Once complete, open your browser to **http://localhost:3000/**
+
+---
+
+## 📋 Prerequisites
+
+If you prefer manual installation, ensure you have:
+
+| Dependency | Version | Check Command |
+|------------|---------|---------------|
+| Node.js | v18+ | `node --version` |
+| npm | v9+ | `npm --version` |
+| Emscripten | v3+ | `emcc --version` |
+| Make | Any | `make --version` |
+
+### Installing Dependencies Manually
+
+#### macOS (Homebrew)
+```bash
+brew install node emscripten
+```
+
+#### Linux (Ubuntu/Debian)
+```bash
+# Node.js
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Emscripten
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+./emsdk install latest
+./emsdk activate latest
+source ./emsdk_env.sh
+```
+
+---
+
+## 🛠️ Manual Build & Run
+
+If you already have dependencies installed:
+
+```bash
+# 1. Install Node dependencies
+npm install
+
+# 2. Build WebAssembly module
+make
+
+# 3. Start development server
+npm run dev
+```
+
+---
+
+## 📁 Project Structure
+
+```
+os_project/
+├── src/
+│   ├── c/                    # C source files (compiled to WebAssembly)
+│   │   ├── process.c         # Process data structures
+│   │   ├── process.h
+│   │   ├── scheduler.c       # Core scheduling algorithms
+│   │   ├── scheduler.h
+│   │   └── wasm_bindings.c   # JavaScript/Wasm bridge
+│   ├── components/           # React components
+│   ├── App.jsx               # Main React application
+│   └── App.css               # Styles
+├── public/
+│   ├── scheduler.js          # Generated Wasm glue code
+│   └── scheduler.wasm        # Compiled WebAssembly binary
+├── Makefile                  # Build configuration for Wasm
+├── install.sh                # One-command setup script
+├── package.json              # Node.js dependencies
+└── README.md                 # This file
+```
+
+---
+
+## 🧠 Supported Scheduling Algorithms
+
+| Algorithm | Type | Description |
+|-----------|------|-------------|
+| **FCFS** | Non-preemptive | First Come, First Served - processes run in arrival order |
+| **SJF** | Non-preemptive | Shortest Job First - shortest burst time runs first |
+| **SRTF** | Preemptive | Shortest Remaining Time First - preempts for shorter jobs |
+| **Priority** | Non-preemptive | Highest priority (lowest number) runs first |
+| **Round Robin** | Preemptive | Time-sliced execution with configurable quantum |
+| **LJF** | Non-preemptive | Longest Job First - longest burst time runs first |
+| **LRTF** | Preemptive | Longest Remaining Time First - preempts for longer jobs |
+
+---
+
+## 📊 Features
+
+- **Real-time Visualization**: Watch processes move through states (NEW → READY → RUNNING → TERMINATED)
+- **Gantt Chart**: Visual timeline of CPU execution
+- **Performance Metrics**: 
+  - Average Wait Time
+  - Average Turnaround Time
+  - Average Response Time
+  - CPU Utilization
+  - Throughput
+- **Customizable Processes**: Add processes with custom arrival time, burst time, and priority
+- **Aging Support**: Prevent starvation with priority boosting
+
+---
+
+## 🔧 Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `./install.sh` | Full installation and run |
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `make` | Compile C to WebAssembly |
+| `make clean` | Remove compiled Wasm files |
+| `make debug` | Build Wasm with debug symbols |
+
+---
+
+## 🐛 Troubleshooting
+
+### `emcc: command not found`
+Emscripten is not installed or not in your PATH. Run:
+```bash
+brew install emscripten  # macOS
+# OR
+source /path/to/emsdk/emsdk_env.sh  # Linux
+```
+
+### WebAssembly module fails to load
+Ensure you've run `make` to compile the C code:
+```bash
+make clean && make
+```
+
+### Port 3000 already in use
+Kill the existing process or use a different port:
+```bash
+npm run dev -- --port 3001
+```
+
+---
+
+## 📄 License
+
+MIT License - feel free to use this for educational purposes!
+
+---
+
+## 🙏 Acknowledgments
+
+- Built for Operating Systems coursework
+- WebAssembly powered by [Emscripten](https://emscripten.org/)
+- Frontend powered by [React](https://react.dev/) + [Vite](https://vite.dev/)
