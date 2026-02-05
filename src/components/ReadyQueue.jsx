@@ -34,7 +34,7 @@ export default function ReadyQueue({ queue, runningPid }) {
                 </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div className="ready-queue-row" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 {/* Running process */}
                 <div style={{ textAlign: 'center' }}>
                     <div style={{

@@ -60,6 +60,17 @@ function App() {
         onRunToEnd={runToEnd}
       />
 
+      {/* Algorithm Selector */}
+      <section className="algorithm-section">
+        <AlgorithmSelector
+          selected={state.algorithm}
+          onSelect={setAlgorithm}
+          timeQuantum={state.timeQuantum}
+          onTimeQuantumChange={setTimeQuantum}
+          disabled={isSimulating}
+        />
+      </section>
+
       {/* Main Content */}
       <div className="main-content">
         {/* Sidebar */}
@@ -69,36 +80,34 @@ function App() {
             disabled={isRunning}
           />
 
-          <AlgorithmSelector
-            selected={state.algorithm}
-            onSelect={setAlgorithm}
-            timeQuantum={state.timeQuantum}
-            onTimeQuantumChange={setTimeQuantum}
-            disabled={isSimulating}
+          <MetricsDashboard
+            metrics={state.metrics}
+            isCompleted={state.isCompleted}
           />
         </aside>
 
         {/* Visualization Area */}
         <main className="visualization-area">
-          <ReadyQueue
-            queue={state.readyQueue}
-            runningPid={state.runningPid}
-          />
+          <div className="viz-section viz-section--horizontal">
+            <ReadyQueue
+              queue={state.readyQueue}
+              runningPid={state.runningPid}
+            />
+          </div>
 
-          <GanttChart
-            gantt={state.gantt}
-            currentTime={state.currentTime}
-          />
+          <div className="viz-section viz-section--horizontal">
+            <GanttChart
+              gantt={state.gantt}
+              currentTime={state.currentTime}
+            />
+          </div>
 
-          <ProcessTable
-            processes={state.processes}
-            runningPid={state.runningPid}
-          />
-
-          <MetricsDashboard
-            metrics={state.metrics}
-            isCompleted={state.isCompleted}
-          />
+          <div className="viz-section viz-section--vertical">
+            <ProcessTable
+              processes={state.processes}
+              runningPid={state.runningPid}
+            />
+          </div>
         </main>
       </div>
 

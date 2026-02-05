@@ -19,7 +19,6 @@ export default function ControlPanel({
 }) {
     const canStart = processCount > 0 && !isCompleted && !isRunning;
     const canStep = processCount > 0 && !isCompleted && !isRunning;
-    const canPause = isRunning;
 
     return (
         <div className="control-panel">
@@ -127,8 +126,7 @@ export default function ControlPanel({
                 <span style={{
                     fontSize: '0.8rem',
                     color: 'var(--text-muted)',
-                    minWidth: '50px',
-                    fontFamily: 'JetBrains Mono, monospace'
+                    minWidth: '50px'
                 }}>
                     {speed}ms
                 </span>

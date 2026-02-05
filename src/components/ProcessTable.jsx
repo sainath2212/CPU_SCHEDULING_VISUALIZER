@@ -51,7 +51,7 @@ export default function ProcessTable({ processes, runningPid }) {
                 </span>
             </div>
 
-            <div style={{ overflowX: 'auto' }}>
+            <div className="process-table-scroll">
                 <table className="process-table">
                     <thead>
                         <tr>
@@ -81,7 +81,6 @@ export default function ProcessTable({ processes, runningPid }) {
                                 <td>{process.priority}</td>
                                 <td>
                                     <span style={{
-                                        fontFamily: 'JetBrains Mono, monospace',
                                         color: process.remainingTime > 0 ? 'var(--text-primary)' : 'var(--text-muted)'
                                     }}>
                                         {process.remainingTime}
