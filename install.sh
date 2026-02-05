@@ -2,6 +2,7 @@
 
 # ============================================================
 #  CPU Scheduling Visualizer - Installation & Run Script
+#  Supports both Web (WASM) and Terminal modes
 # ============================================================
 
 set -e  # Exit on any error
@@ -11,7 +12,11 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
+
+# Mode flags
+TERMINAL_MODE=0
 
 print_step() {
     echo -e "\n${BLUE}[STEP]${NC} $1"
@@ -28,6 +33,84 @@ print_warning() {
 print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
+
+print_usage() {
+    echo -e "\n${CYAN}CPU Scheduling Visualizer - Installation Script${NC}\n"
+    echo "Usage: ./install.sh [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  --terminal, -t    Build and run terminal version (no web dependencies)"
+    echo "  --web, -w         Build and run web version (default)"
+    echo "  --help, -h        Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  ./install.sh              # Run web version"
+    echo "  ./install.sh --terminal   # Run terminal version"
+    echo ""
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --terminal|-t)
+            TERMINAL_MODE=1
+            shift
+            ;;
+        --web|-w)
+            TERMINAL_MODE=0
+            shift
+            ;;
+        --help|-h)
+            print_usage
+            exit 0
+            ;;
+        *)
+            print_error "Unknown option: $1"
+            print_usage
+            exit 1
+            ;;
+    esac
+done
+
+# ============================================================
+#  Terminal Mode Build
+# ============================================================
+if [[ $TERMINAL_MODE -eq 1 ]]; then
+    echo -e "\n${CYAN}╔════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║     CPU Scheduling Visualizer - Terminal Mode          ║${NC}"
+    echo -e "${CYAN}╚════════════════════════════════════════════════════════╝${NC}\n"
+
+    print_step "Checking for C compiler..."
+    if ! command -v cc &> /dev/null; then
+        print_error "C compiler (cc) not found!"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            print_warning "Install Xcode Command Line Tools: xcode-select --install"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            print_warning "Install build-essential: sudo apt-get install build-essential"
+        fi
+        exit 1
+    fi
+    print_success "C compiler found."
+
+    print_step "Building terminal version..."
+    make terminal
+    print_success "Terminal build complete!"
+
+    print_step "Starting terminal scheduler..."
+    echo -e "\n${GREEN}============================================================${NC}"
+    echo -e "${GREEN}  Launching CPU Scheduling Visualizer (Terminal Mode)${NC}"
+    echo -e "${GREEN}============================================================${NC}\n"
+    
+    ./bin/scheduler_terminal
+    exit 0
+fi
+
+# ============================================================
+#  Web Mode Build (default)
+# ============================================================
+echo -e "\n${CYAN}╔════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║     CPU Scheduling Visualizer - Web Mode               ║${NC}"
+echo -e "${CYAN}╚════════════════════════════════════════════════════════╝${NC}\n"
 
 # ============================================================
 #  Step 1: Check for Homebrew (macOS only)
