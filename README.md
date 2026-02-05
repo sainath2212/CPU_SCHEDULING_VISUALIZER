@@ -2,13 +2,15 @@
 
 A real-time, interactive CPU scheduling simulator built with **React**, **Vite**, and **WebAssembly (C)**. Visualize how different scheduling algorithms work, including FCFS, SJF, SRTF, Priority, Round Robin, LJF, and LRTF.
 
-![CPU Scheduler](https://img.shields.io/badge/Built_with-WebAssembly-blueviolet) ![React](https://img.shields.io/badge/Frontend-React-blue) ![Vite](https://img.shields.io/badge/Bundler-Vite-yellow)
+**Now with Terminal Mode!** Run the simulation directly in your terminal with colored ASCII visualization.
+
+![CPU Scheduler](https://img.shields.io/badge/Built_with-WebAssembly-blueviolet) ![React](https://img.shields.io/badge/Frontend-React-blue) ![Vite](https://img.shields.io/badge/Bundler-Vite-yellow) ![Terminal](https://img.shields.io/badge/Terminal-C-green)
 
 ---
 
 ## 🚀 Quick Start
 
-### One-Command Installation & Run
+### Option 1: Web Mode (Browser)
 
 ```bash
 ./install.sh
@@ -23,6 +25,32 @@ This script will:
 6. ✅ Start the development server (`npm run dev`)
 
 Once complete, open your browser to **http://localhost:3000/**
+
+### Option 2: Terminal Mode (No Web Dependencies!)
+
+```bash
+./install.sh --terminal
+```
+
+Or build and run manually:
+
+```bash
+make terminal
+./bin/scheduler_terminal
+```
+
+**Terminal mode features:**
+- 🎨 Colored ASCII visualization with ANSI codes
+- 📊 Real-time process table and Gantt chart
+- ⚡ Step-by-step or auto-run simulation
+- 📈 Performance metrics display
+- 🎮 Interactive menu-driven interface
+
+**Command-line options:**
+```bash
+./bin/scheduler_terminal --help          # Show help
+./bin/scheduler_terminal -a 4 -q 2 -s -r # Round Robin, quantum=2, sample data, auto-run
+```
 
 ---
 
@@ -87,14 +115,19 @@ os_project/
 │   │   ├── process.h
 │   │   ├── scheduler.c       # Core scheduling algorithms
 │   │   ├── scheduler.h
-│   │   └── wasm_bindings.c   # JavaScript/Wasm bridge
+│   │   ├── wasm_bindings.c   # JavaScript/Wasm bridge
+│   │   ├── terminal_ui.c     # Terminal display functions
+│   │   ├── terminal_ui.h
+│   │   └── main_terminal.c   # Terminal entry point
 │   ├── components/           # React components
 │   ├── App.jsx               # Main React application
 │   └── App.css               # Styles
 ├── public/
 │   ├── scheduler.js          # Generated Wasm glue code
 │   └── scheduler.wasm        # Compiled WebAssembly binary
-├── Makefile                  # Build configuration for Wasm
+├── bin/
+│   └── scheduler_terminal    # Terminal executable (after build)
+├── Makefile                  # Build configuration for Wasm + Terminal
 ├── install.sh                # One-command setup script
 ├── package.json              # Node.js dependencies
 └── README.md                 # This file
@@ -135,12 +168,15 @@ os_project/
 
 | Command | Description |
 |---------|-------------|
-| `./install.sh` | Full installation and run |
+| `./install.sh` | Full installation and run (web mode) |
+| `./install.sh --terminal` | Build and run terminal mode |
 | `npm run dev` | Start development server |
 | `npm run build` | Build for production |
 | `npm run preview` | Preview production build |
 | `make` | Compile C to WebAssembly |
+| `make terminal` | Build terminal executable |
 | `make clean` | Remove compiled Wasm files |
+| `make clean-all` | Remove all build artifacts |
 | `make debug` | Build Wasm with debug symbols |
 
 ---
@@ -171,7 +207,7 @@ npm run dev -- --port 3001
 
 ## 📄 License
 
-MIT License -feel free to use this for educational purposes!
+MIT License - feel free to use this for educational purposes!
 
 ---
 
