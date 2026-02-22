@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 
-export default function ProcessForm({ onAddProcess, disabled }) {
+export default function ProcessForm({ onAddProcess, onAddSample, disabled }) {
     const [arrivalTime, setArrivalTime] = useState('');
     const [burstTime, setBurstTime] = useState('');
     const [priority, setPriority] = useState('');
@@ -31,12 +31,20 @@ export default function ProcessForm({ onAddProcess, disabled }) {
     };
 
     const handleAddSample = () => {
-        // Add sample processes for testing
-        onAddProcess(0, 5, 2);
-        onAddProcess(1, 3, 1);
-        onAddProcess(2, 8, 3);
-        onAddProcess(3, 2, 4);
-        onAddProcess(4, 4, 2);
+        // Generate 5 processes with randomized values
+        const count = 5;
+        const processes = [];
+        for (let i = 0; i < count; i++) {
+            processes.push({
+                arrivalTime: Math.floor(Math.random() * 21),   // 0 to 20
+                burstTime: Math.floor(Math.random() * 10) + 1, // 1 to 10
+                priority: Math.floor(Math.random() * 5) + 1,   // 1 to 5
+            });
+        }
+        // Sort by arrival time for cleaner display
+        processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
+        // Use batch add — no metrics calculated, just fills data
+        onAddSample(processes);
     };
 
     return (

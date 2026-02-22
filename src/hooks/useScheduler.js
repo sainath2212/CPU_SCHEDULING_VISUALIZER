@@ -1,12 +1,14 @@
 /**
  * CPU Scheduling Visualizer - Scheduler Hook
- * Provides interface to the C/WASM scheduling engine
- * Falls back to pure JavaScript if WASM not available
+ * All scheduling logic runs on the Python backend.
+ * This hook only manages React state and calls the backend API.
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 
-// Algorithm constants matching C enum
+const API_BASE = 'http://10.7.19.101:5001';
+
+// Algorithm constants (for display only)
 export const ALGORITHMS = {
   FCFS: 0,
   SJF: 1,
@@ -14,7 +16,8 @@ export const ALGORITHMS = {
   PRIORITY: 3,
   ROUND_ROBIN: 4,
   LJF: 5,
-  LRTF: 6
+  LRTF: 6,
+  MLFQ: 7
 };
 
 export const ALGORITHM_NAMES = {
@@ -24,7 +27,8 @@ export const ALGORITHM_NAMES = {
   [ALGORITHMS.PRIORITY]: 'Priority',
   [ALGORITHMS.ROUND_ROBIN]: 'Round Robin',
   [ALGORITHMS.LJF]: 'LJF',
-  [ALGORITHMS.LRTF]: 'LRTF'
+  [ALGORITHMS.LRTF]: 'LRTF',
+  [ALGORITHMS.MLFQ]: 'MLFQ'
 };
 
 export const ALGORITHM_DESCRIPTIONS = {
@@ -34,18 +38,9 @@ export const ALGORITHM_DESCRIPTIONS = {
   [ALGORITHMS.PRIORITY]: 'Priority Based',
   [ALGORITHMS.ROUND_ROBIN]: 'Time Quantum',
   [ALGORITHMS.LJF]: 'Longest Job First',
-  [ALGORITHMS.LRTF]: 'Longest Remaining Time'
+  [ALGORITHMS.LRTF]: 'Longest Remaining Time',
+  [ALGORITHMS.MLFQ]: '3-Level Feedback Queue'
 };
-
-// Process state constants
-export const STATES = {
-  NEW: 0,
-  READY: 1,
-  RUNNING: 2,
-  TERMINATED: 3
-};
-
-export const STATE_NAMES = ['NEW', 'READY', 'RUNNING', 'TERMINATED'];
 
 // Initial state
 const initialState = {
@@ -68,406 +63,166 @@ const initialState = {
   }
 };
 
-/**
- * Pure JavaScript implementation of the scheduling algorithms
- * Used as fallback when WASM is not available
- */
-class JSScheduler {
-  constructor() {
-    this.reset();
-  }
+// ── API helper ───────────────────────────────────────────────────────
 
-  reset() {
-    this.processes = [];
-    this.gantt = [];
-    this.readyQueue = [];
-    this.currentTime = 0;
-    this.runningPid = -1;
-    this.isCompleted = false;
-    this.algorithm = ALGORITHMS.FCFS;
-    this.timeQuantum = 2;
-    this.quantumRemaining = 0;
-    this.metrics = { ...initialState.metrics };
-  }
-
-  setAlgorithm(algo) {
-    this.algorithm = algo;
-  }
-
-  setTimeQuantum(quantum) {
-    this.timeQuantum = quantum > 0 ? quantum : 1;
-  }
-
-  addProcess(arrivalTime, burstTime, priority) {
-    const pid = this.processes.length;
-    this.processes.push({
-      pid,
-      arrivalTime,
-      burstTime,
-      priority,
-      remainingTime: burstTime,
-      startTime: -1,
-      finishTime: -1,
-      waitTime: 0,
-      responseTime: -1,
-      turnaroundTime: 0,
-      state: STATES.NEW,
-      stateName: 'NEW'
-    });
-    return pid;
-  }
-
-  clearProcesses() {
-    this.reset();
-  }
-
-  selectProcess() {
-    if (this.readyQueue.length === 0) return -1;
-
-    let selected = 0;
-    const queue = this.readyQueue;
-
-    switch (this.algorithm) {
-      case ALGORITHMS.FCFS:
-      case ALGORITHMS.ROUND_ROBIN:
-        // Take from front
-        return queue[0];
-
-      case ALGORITHMS.SJF:
-        // Smallest burst time
-        for (let i = 1; i < queue.length; i++) {
-          const pid = queue[i];
-          const curr = this.processes[queue[selected]];
-          const proc = this.processes[pid];
-          if (proc.burstTime < curr.burstTime) selected = i;
-        }
-        return queue[selected];
-
-      case ALGORITHMS.SRTF:
-        // Smallest remaining time
-        for (let i = 1; i < queue.length; i++) {
-          const pid = queue[i];
-          const curr = this.processes[queue[selected]];
-          const proc = this.processes[pid];
-          if (proc.remainingTime < curr.remainingTime) selected = i;
-        }
-        return queue[selected];
-
-      case ALGORITHMS.PRIORITY:
-        // Lowest priority number = highest priority
-        for (let i = 1; i < queue.length; i++) {
-          const pid = queue[i];
-          const curr = this.processes[queue[selected]];
-          const proc = this.processes[pid];
-          if (proc.priority < curr.priority) selected = i;
-        }
-        return queue[selected];
-
-      case ALGORITHMS.LJF:
-        // Largest burst time
-        for (let i = 1; i < queue.length; i++) {
-          const pid = queue[i];
-          const curr = this.processes[queue[selected]];
-          const proc = this.processes[pid];
-          if (proc.burstTime > curr.burstTime) selected = i;
-        }
-        return queue[selected];
-
-      case ALGORITHMS.LRTF:
-        // Largest remaining time
-        for (let i = 1; i < queue.length; i++) {
-          const pid = queue[i];
-          const curr = this.processes[queue[selected]];
-          const proc = this.processes[pid];
-          if (proc.remainingTime > curr.remainingTime) selected = i;
-        }
-        return queue[selected];
-
-      default:
-        return queue[0];
-    }
-  }
-
-  isPreemptive() {
-    return this.algorithm === ALGORITHMS.SRTF || 
-           this.algorithm === ALGORITHMS.LRTF || 
-           this.algorithm === ALGORITHMS.ROUND_ROBIN;
-  }
-
-  removeFromQueue(pid) {
-    const idx = this.readyQueue.indexOf(pid);
-    if (idx !== -1) {
-      this.readyQueue.splice(idx, 1);
-    }
-  }
-
-  addGanttEntry(pid, start, end) {
-    // Try to merge with last entry
-    if (this.gantt.length > 0) {
-      const last = this.gantt[this.gantt.length - 1];
-      if (last.pid === pid && last.endTime === start) {
-        last.endTime = end;
-        return;
-      }
-    }
-    this.gantt.push({ pid, startTime: start, endTime: end, coreId: 0 });
-  }
-
-  step() {
-    if (this.isCompleted) return false;
-
-    // Step 1: Check for newly arrived processes
-    for (const p of this.processes) {
-      if (p.state === STATES.NEW && p.arrivalTime <= this.currentTime) {
-        p.state = STATES.READY;
-        p.stateName = 'READY';
-        this.readyQueue.push(p.pid);
-      }
-    }
-
-    // Step 2: Handle preemption
-    if (this.isPreemptive() && this.runningPid !== -1) {
-      const running = this.processes[this.runningPid];
-
-      if (this.algorithm === ALGORITHMS.ROUND_ROBIN) {
-        if (this.quantumRemaining <= 0) {
-          running.state = STATES.READY;
-          running.stateName = 'READY';
-          this.readyQueue.push(this.runningPid);
-          this.runningPid = -1;
-        }
-      } else {
-        const nextPid = this.selectProcess();
-        if (nextPid !== -1 && nextPid !== this.runningPid) {
-          const next = this.processes[nextPid];
-          let shouldPreempt = false;
-
-          if (this.algorithm === ALGORITHMS.SRTF) {
-            shouldPreempt = next.remainingTime < running.remainingTime;
-          } else if (this.algorithm === ALGORITHMS.LRTF) {
-            shouldPreempt = next.remainingTime > running.remainingTime;
-          }
-
-          if (shouldPreempt) {
-            running.state = STATES.READY;
-            running.stateName = 'READY';
-            this.readyQueue.push(this.runningPid);
-            this.runningPid = -1;
-          }
-        }
-      }
-    }
-
-    // Step 3: Select next process if CPU is idle
-    if (this.runningPid === -1) {
-      const nextPid = this.selectProcess();
-
-      if (nextPid !== -1) {
-        this.removeFromQueue(nextPid);
-        this.runningPid = nextPid;
-
-        const p = this.processes[nextPid];
-        p.state = STATES.RUNNING;
-        p.stateName = 'RUNNING';
-
-        if (p.startTime === -1) {
-          p.startTime = this.currentTime;
-          p.responseTime = this.currentTime - p.arrivalTime;
-        }
-
-        if (this.algorithm === ALGORITHMS.ROUND_ROBIN) {
-          this.quantumRemaining = this.timeQuantum;
-        }
-      }
-    }
-
-    // Step 4: Execute one time unit
-    if (this.runningPid !== -1) {
-      const p = this.processes[this.runningPid];
-      p.remainingTime--;
-
-      if (this.algorithm === ALGORITHMS.ROUND_ROBIN) {
-        this.quantumRemaining--;
-      }
-
-      this.addGanttEntry(this.runningPid, this.currentTime, this.currentTime + 1);
-
-      if (p.remainingTime <= 0) {
-        p.state = STATES.TERMINATED;
-        p.stateName = 'TERMINATED';
-        p.finishTime = this.currentTime + 1;
-        p.turnaroundTime = p.finishTime - p.arrivalTime;
-        p.waitTime = p.turnaroundTime - p.burstTime;
-        this.runningPid = -1;
-      }
-    } else {
-      this.addGanttEntry(-1, this.currentTime, this.currentTime + 1);
-    }
-
-    // Step 5: Update waiting time for ready processes
-    for (const pid of this.readyQueue) {
-      this.processes[pid].waitTime++;
-    }
-
-    // Step 6: Advance time
-    this.currentTime++;
-
-    // Step 7: Check completion
-    const allTerminated = this.processes.length > 0 && 
-      this.processes.every(p => p.state === STATES.TERMINATED);
-
-    if (allTerminated) {
-      this.isCompleted = true;
-      this.calculateMetrics();
-    }
-
-    return !this.isCompleted;
-  }
-
-  runToCompletion() {
-    while (!this.isCompleted && this.currentTime < 10000) {
-      this.step();
-    }
-  }
-
-  calculateMetrics() {
-    if (this.processes.length === 0) return;
-
-    let totalWait = 0, totalTurnaround = 0, totalResponse = 0, totalBurst = 0;
-    let maxFinish = 0, minArrival = Infinity;
-
-    for (const p of this.processes) {
-      totalWait += p.waitTime;
-      totalTurnaround += p.turnaroundTime;
-      totalResponse += p.responseTime;
-      totalBurst += p.burstTime;
-      if (p.finishTime > maxFinish) maxFinish = p.finishTime;
-      if (p.arrivalTime < minArrival) minArrival = p.arrivalTime;
-    }
-
-    const n = this.processes.length;
-    const totalTime = maxFinish - minArrival;
-
-    this.metrics = {
-      avgWaitTime: totalWait / n,
-      avgTurnaroundTime: totalTurnaround / n,
-      avgResponseTime: totalResponse / n,
-      cpuUtilization: totalTime > 0 ? (totalBurst / totalTime) * 100 : 0,
-      throughput: totalTime > 0 ? n / totalTime : 0,
-      totalIdleTime: totalTime - totalBurst,
-      totalExecutionTime: totalTime
+async function api(endpoint, body = null, method = 'POST') {
+  try {
+    const opts = {
+      method,
+      headers: { 'Content-Type': 'application/json' },
     };
-  }
-
-  getState() {
-    return {
-      currentTime: this.currentTime,
-      runningPid: this.runningPid,
-      isCompleted: this.isCompleted,
-      algorithm: this.algorithm,
-      timeQuantum: this.timeQuantum,
-      processes: [...this.processes],
-      gantt: [...this.gantt],
-      readyQueue: [...this.readyQueue],
-      metrics: { ...this.metrics }
-    };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(`${API_BASE}${endpoint}`, opts);
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(`[API] Error calling ${endpoint}:`, err);
+    return {};
   }
 }
 
-/**
- * React hook for the scheduler
- */
+// ── React hook ───────────────────────────────────────────────────────
+
 export function useScheduler() {
   const [state, setState] = useState(initialState);
   const [isRunning, setIsRunning] = useState(false);
-  const [speed, setSpeed] = useState(500); // ms per step
-  const schedulerRef = useRef(new JSScheduler());
+  const [speed, setSpeed] = useState(500);
   const intervalRef = useRef(null);
+  const algoRef = useRef(ALGORITHMS.FCFS);
+  const quantumRef = useRef(2);
 
-  const updateState = useCallback(() => {
-    setState(schedulerRef.current.getState());
+  // Fetch current state from backend
+  const fetchState = useCallback(async () => {
+    const data = await api('/api/state', null, 'GET');
+    setState(data);
   }, []);
 
-  const init = useCallback(() => {
-    schedulerRef.current.reset();
-    updateState();
+  // Init — create fresh scheduler on backend
+  const init = useCallback(async () => {
+    await api('/api/init');
+    await fetchState();
     setIsRunning(false);
-  }, [updateState]);
+  }, [fetchState]);
 
-  const reset = useCallback(() => {
+  // Reset — keep processes, reset simulation
+  const reset = useCallback(async () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    
-    // Reset but keep processes
-    const processes = schedulerRef.current.processes.map(p => ({
+
+    // We need to re-init and re-add processes to reset
+    const currentProcesses = state.processes.map(p => ({
       arrivalTime: p.arrivalTime,
       burstTime: p.burstTime,
       priority: p.priority
     }));
-    const algo = schedulerRef.current.algorithm;
-    const quantum = schedulerRef.current.timeQuantum;
-    
-    schedulerRef.current.reset();
-    schedulerRef.current.setAlgorithm(algo);
-    schedulerRef.current.setTimeQuantum(quantum);
-    
-    for (const p of processes) {
-      schedulerRef.current.addProcess(p.arrivalTime, p.burstTime, p.priority);
+    const currentAlgo = algoRef.current;
+    const currentQuantum = quantumRef.current;
+
+    await api('/api/init');
+    await api('/api/set-algorithm', { algorithm: currentAlgo });
+    await api('/api/set-time-quantum', { quantum: currentQuantum });
+
+    for (const p of currentProcesses) {
+      await api('/api/add-process', p);
     }
-    
-    updateState();
+
+    await fetchState();
     setIsRunning(false);
-  }, [updateState]);
+  }, [state.processes, fetchState]);
 
-  const setAlgorithm = useCallback((algo) => {
-    schedulerRef.current.setAlgorithm(algo);
-    reset();
-  }, [reset]);
+  // Set algorithm
+  const setAlgorithm = useCallback(async (algo) => {
+    algoRef.current = algo;
+    await api('/api/set-algorithm', { algorithm: algo });
+    // Reset simulation with new algorithm
+    const currentProcesses = state.processes.map(p => ({
+      arrivalTime: p.arrivalTime,
+      burstTime: p.burstTime,
+      priority: p.priority
+    }));
 
-  const setTimeQuantum = useCallback((quantum) => {
-    schedulerRef.current.setTimeQuantum(quantum);
-    updateState();
-  }, [updateState]);
+    await api('/api/init');
+    await api('/api/set-algorithm', { algorithm: algo });
+    await api('/api/set-time-quantum', { quantum: quantumRef.current });
 
-  const addProcess = useCallback((arrivalTime, burstTime, priority) => {
-    schedulerRef.current.addProcess(arrivalTime, burstTime, priority);
-    updateState();
-  }, [updateState]);
+    for (const p of currentProcesses) {
+      await api('/api/add-process', p);
+    }
 
-  const clearProcesses = useCallback(() => {
+    await fetchState();
+    setIsRunning(false);
+  }, [state.processes, fetchState]);
+
+  // Set time quantum
+  const setTimeQuantum = useCallback(async (quantum) => {
+    quantumRef.current = quantum;
+    await api('/api/set-time-quantum', { quantum });
+    await fetchState();
+  }, [fetchState]);
+
+  // Add process
+  const addProcess = useCallback(async (arrivalTime, burstTime, priority) => {
+    await api('/api/add-process', { arrivalTime, burstTime, priority });
+    await fetchState();
+  }, [fetchState]);
+
+  // Add multiple sample processes in one batch (clean init first)
+  const addSampleProcesses = useCallback(async (processList) => {
+    // Clean init to avoid stale state
+    await api('/api/init');
+    await api('/api/set-algorithm', { algorithm: algoRef.current });
+    await api('/api/set-time-quantum', { quantum: quantumRef.current });
+
+    // Add all processes without fetching state in between
+    for (const p of processList) {
+      await api('/api/add-process', p);
+    }
+
+    // Fetch state only once at the end
+    await fetchState();
+  }, [fetchState]);
+
+  // Clear all processes
+  const clearProcesses = useCallback(async () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    schedulerRef.current.clearProcesses();
-    updateState();
+    await api('/api/clear-processes');
+    await fetchState();
     setIsRunning(false);
-  }, [updateState]);
+  }, [fetchState]);
 
-  const step = useCallback(() => {
-    schedulerRef.current.step();
-    updateState();
-    
-    if (schedulerRef.current.isCompleted) {
+  // Step — advance one tick on backend
+  const step = useCallback(async () => {
+    const data = await api('/api/step');
+    setState(prev => ({
+      ...prev,
+      ...data,
+    }));
+
+    if (data.isCompleted) {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
       setIsRunning(false);
     }
-  }, [updateState]);
+  }, []);
 
+  // Start — auto-step at speed interval
   const start = useCallback(() => {
     if (state.isCompleted || state.processes.length === 0) return;
-    
+
     setIsRunning(true);
     intervalRef.current = setInterval(() => {
       step();
     }, speed);
   }, [state.isCompleted, state.processes.length, speed, step]);
 
+  // Pause
   const pause = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -476,11 +231,15 @@ export function useScheduler() {
     setIsRunning(false);
   }, []);
 
-  const runToEnd = useCallback(() => {
-    schedulerRef.current.runToCompletion();
-    updateState();
+  // Run to end — complete on backend in one call
+  const runToEnd = useCallback(async () => {
+    const data = await api('/api/run-to-completion');
+    setState(prev => ({
+      ...prev,
+      ...data,
+    }));
     setIsRunning(false);
-  }, [updateState]);
+  }, []);
 
   // Update interval when speed changes
   useEffect(() => {
@@ -511,6 +270,7 @@ export function useScheduler() {
     setAlgorithm,
     setTimeQuantum,
     addProcess,
+    addSampleProcesses,
     clearProcesses,
     step,
     start,

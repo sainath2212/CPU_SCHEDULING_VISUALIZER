@@ -18,6 +18,7 @@ export default function SimulatorPage() {
     setAlgorithm,
     setTimeQuantum,
     addProcess,
+    addSampleProcesses,
     clearProcesses,
     step,
     start,
@@ -33,8 +34,8 @@ export default function SimulatorPage() {
       <nav className="sim-nav">
         <Link to="/" className="sim-back">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-               strokeLinejoin="round">
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+            strokeLinejoin="round">
             <line x1="19" y1="12" x2="5" y2="12" />
             <polyline points="12 19 5 12 12 5" />
           </svg>
@@ -79,7 +80,7 @@ export default function SimulatorPage() {
       {/* ── Main layout ── */}
       <div className="main-content">
         <aside className="sidebar">
-          <ProcessForm onAddProcess={addProcess} disabled={isRunning} />
+          <ProcessForm onAddProcess={addProcess} onAddSample={addSampleProcesses} disabled={false} />
           <MetricsDashboard
             metrics={state.metrics}
             isCompleted={state.isCompleted}

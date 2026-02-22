@@ -14,6 +14,7 @@ export default function AlgorithmSelector({ selected, onSelect, timeQuantum, onT
         { id: ALGORITHMS.ROUND_ROBIN, preemptive: true },
         { id: ALGORITHMS.LJF, preemptive: false },
         { id: ALGORITHMS.LRTF, preemptive: true },
+        { id: ALGORITHMS.MLFQ, preemptive: true },
     ];
 
     return (
