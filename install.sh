@@ -2,7 +2,8 @@
 
 # ============================================================
 #  CPU Scheduling Visualizer - Installation & Run Script
-#  Supports both Web (WASM) and Terminal modes
+#  Supports both Web and Terminal modes
+#  Backend: Python | Frontend: React + Vite
 # ============================================================
 
 set -e  # Exit on any error
@@ -39,7 +40,7 @@ print_usage() {
     echo "Usage: ./install.sh [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  --terminal, -t    Build and run terminal version (no web dependencies)"
+    echo "  --terminal, -t    Build and run terminal version (Python)"
     echo "  --web, -w         Build and run web version (default)"
     echo "  --help, -h        Show this help message"
     echo ""
@@ -73,40 +74,63 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ============================================================
-#  Terminal Mode Build
+#  Common: Check for Python 3
+# ============================================================
+check_python() {
+    print_step "Checking for Python 3..."
+
+    if command -v python3 &> /dev/null; then
+        print_success "Python 3 found: $(python3 --version)"
+    else
+        print_error "Python 3 not found!"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            print_warning "Install Python 3: brew install python3"
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            print_warning "Install Python 3: sudo apt-get install python3 python3-pip python3-venv"
+        fi
+        exit 1
+    fi
+}
+
+# ============================================================
+#  Common: Install Python dependencies
+# ============================================================
+install_python_deps() {
+    print_step "Installing Python dependencies..."
+
+    if [ ! -d "backend/venv" ]; then
+        python3 -m venv backend/venv
+        print_success "Virtual environment created."
+    fi
+
+    source backend/venv/bin/activate
+    pip install -r backend/requirements.txt --quiet
+    print_success "Python dependencies installed."
+}
+
+# ============================================================
+#  Terminal Mode
 # ============================================================
 if [[ $TERMINAL_MODE -eq 1 ]]; then
     echo -e "\n${CYAN}╔════════════════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}║     CPU Scheduling Visualizer - Terminal Mode          ║${NC}"
     echo -e "${CYAN}╚════════════════════════════════════════════════════════╝${NC}\n"
 
-    print_step "Checking for C compiler..."
-    if ! command -v cc &> /dev/null; then
-        print_error "C compiler (cc) not found!"
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            print_warning "Install Xcode Command Line Tools: xcode-select --install"
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            print_warning "Install build-essential: sudo apt-get install build-essential"
-        fi
-        exit 1
-    fi
-    print_success "C compiler found."
-
-    print_step "Building terminal version..."
-    make terminal
-    print_success "Terminal build complete!"
+    check_python
+    install_python_deps
 
     print_step "Starting terminal scheduler..."
     echo -e "\n${GREEN}============================================================${NC}"
     echo -e "${GREEN}  Launching CPU Scheduling Visualizer (Terminal Mode)${NC}"
     echo -e "${GREEN}============================================================${NC}\n"
-    
-    ./bin/scheduler_terminal
+
+    source backend/venv/bin/activate
+    python3 backend/terminal_ui.py
     exit 0
 fi
 
 # ============================================================
-#  Web Mode Build (default)
+#  Web Mode (default)
 # ============================================================
 echo -e "\n${CYAN}╔════════════════════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║     CPU Scheduling Visualizer - Web Mode               ║${NC}"
@@ -146,51 +170,46 @@ else
 fi
 
 # ============================================================
-#  Step 3: Check for Emscripten (emcc)
+#  Step 3: Check for Python 3
 # ============================================================
-print_step "Checking for Emscripten (emcc)..."
-
-if ! command -v emcc &> /dev/null; then
-    print_warning "Emscripten not found. Installing Emscripten..."
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install emscripten
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        print_warning "For Linux, please install Emscripten manually:"
-        print_warning "  git clone https://github.com/emscripten-core/emsdk.git"
-        print_warning "  cd emsdk && ./emsdk install latest && ./emsdk activate latest"
-        print_warning "  source ./emsdk_env.sh"
-        exit 1
-    fi
-    print_success "Emscripten installed."
-else
-    print_success "Emscripten is already installed."
-fi
+check_python
 
 # ============================================================
 #  Step 4: Install Node dependencies
 # ============================================================
 print_step "Installing Node.js dependencies..."
 
+# Clean install to avoid rollup optional dependency issues
+if [ -d "node_modules" ]; then
+    print_warning "Cleaning existing node_modules for fresh install..."
+    rm -rf node_modules package-lock.json
+fi
+
 npm install
 print_success "Node.js dependencies installed."
 
 # ============================================================
-#  Step 5: Build WebAssembly module
+#  Step 5: Install Python dependencies
 # ============================================================
-print_step "Building WebAssembly module..."
-
-make clean 2>/dev/null || true
-make
-print_success "WebAssembly module built successfully."
+install_python_deps
 
 # ============================================================
-#  Step 6: Start the development server
+#  Step 6: Start the development servers
 # ============================================================
-print_step "Starting development server..."
+print_step "Starting development servers..."
 
 echo -e "\n${GREEN}============================================================${NC}"
 echo -e "${GREEN}  CPU Scheduling Visualizer is starting!${NC}"
-echo -e "${GREEN}  Open your browser to: http://localhost:3000/${NC}"
+echo -e "${GREEN}  Frontend: http://localhost:3000/${NC}"
+echo -e "${GREEN}  Backend API: http://localhost:5001/${NC}"
 echo -e "${GREEN}============================================================${NC}\n"
+
+# Start Flask backend in background, then Vite frontend
+source backend/venv/bin/activate
+python3 backend/app.py &
+FLASK_PID=$!
+
+# Trap to kill Flask on exit
+trap "kill $FLASK_PID 2>/dev/null" EXIT
 
 npm run dev

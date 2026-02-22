@@ -1,10 +1,10 @@
 # CPU Scheduling Visualizer
 
-A real-time, interactive CPU scheduling simulator built with **React**, **Vite**, and **WebAssembly (C)**. Visualize how different scheduling algorithms work, including FCFS, SJF, SRTF, Priority, Round Robin, LJF, and LRTF.
+A real-time, interactive CPU scheduling simulator built with **React**, **Vite**, and a **Python** backend. Visualize how different scheduling algorithms work, including FCFS, SJF, SRTF, Priority, Round Robin, LJF, and LRTF.
 
 **Now with Terminal Mode!** Run the simulation directly in your terminal with colored ASCII visualization.
 
-![CPU Scheduler](https://img.shields.io/badge/Built_with-WebAssembly-blueviolet) ![React](https://img.shields.io/badge/Frontend-React-blue) ![Vite](https://img.shields.io/badge/Bundler-Vite-yellow) ![Terminal](https://img.shields.io/badge/Terminal-C-green)
+![CPU Scheduler](https://img.shields.io/badge/Backend-Python-blue) ![React](https://img.shields.io/badge/Frontend-React-blue) ![Vite](https://img.shields.io/badge/Bundler-Vite-yellow) ![Terminal](https://img.shields.io/badge/Terminal-Python-green)
 
 ---
 
@@ -19,10 +19,10 @@ A real-time, interactive CPU scheduling simulator built with **React**, **Vite**
 This script will:
 1. ✅ Check for and install **Homebrew** (macOS only)
 2. ✅ Check for and install **Node.js**
-3. ✅ Check for and install **Emscripten** (for WebAssembly compilation)
+3. ✅ Check for and install **Python 3**
 4. ✅ Install all Node.js dependencies (`npm install`)
-5. ✅ Build the WebAssembly module (`make`)
-6. ✅ Start the development server (`npm run dev`)
+5. ✅ Install Python dependencies (`pip install`)
+6. ✅ Start the Python API server and Vite dev server
 
 Once complete, open your browser to **http://localhost:3000/**
 
@@ -32,11 +32,13 @@ Once complete, open your browser to **http://localhost:3000/**
 ./install.sh --terminal
 ```
 
-Or build and run manually:
+Or run manually:
 
 ```bash
-make terminal
-./bin/scheduler_terminal
+python3 -m venv backend/venv
+source backend/venv/bin/activate
+pip install -r backend/requirements.txt
+python3 backend/terminal_ui.py
 ```
 
 **Terminal mode features:**
@@ -48,8 +50,8 @@ make terminal
 
 **Command-line options:**
 ```bash
-./bin/scheduler_terminal --help          # Show help
-./bin/scheduler_terminal -a 4 -q 2 -s -r # Round Robin, quantum=2, sample data, auto-run
+python3 backend/terminal_ui.py --help              # Show help
+python3 backend/terminal_ui.py -a 4 -q 2 -s -r    # Round Robin, quantum=2, sample data, auto-run
 ```
 
 ### 🌐 Option 3: Hosted Demo (No Installation Required)
@@ -70,8 +72,7 @@ Try the CPU Scheduling Visualizer instantly using the hosted web version:
   - Throughput
 - 🎨 Interactive, responsive UI optimized for desktop and mobile
 
-> ⚠️ **Note:** Terminal Mode and low-level debugging features are only available in the local build.  
-> For full functionality (WebAssembly build control + terminal UI), use **Option 1 (Web Mode)** or **Option 2 (Terminal Mode)**.
+> ⚠️ **Note:** Terminal Mode is only available in the local build.
 
 ---
 
@@ -83,14 +84,14 @@ If you prefer manual installation, ensure you have:
 |------------|---------|---------------|
 | Node.js | v18+ | `node --version` |
 | npm | v9+ | `npm --version` |
-| Emscripten | v3+ | `emcc --version` |
-| Make | Any | `make --version` |
+| Python | 3.8+ | `python3 --version` |
+| pip | Any | `pip3 --version` |
 
 ### Installing Dependencies Manually
 
 #### macOS (Homebrew)
 ```bash
-brew install node emscripten
+brew install node python3
 ```
 
 #### Linux (Ubuntu/Debian)
@@ -99,12 +100,8 @@ brew install node emscripten
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Emscripten
-git clone https://github.com/emscripten-core/emsdk.git
-cd emsdk
-./emsdk install latest
-./emsdk activate latest
-source ./emsdk_env.sh
+# Python 3
+sudo apt-get install python3 python3-pip python3-venv
 ```
 
 ---
@@ -117,10 +114,15 @@ If you already have dependencies installed:
 # 1. Install Node dependencies
 npm install
 
-# 2. Build WebAssembly module
-make
+# 2. Install Python dependencies
+python3 -m venv backend/venv
+source backend/venv/bin/activate
+pip install -r backend/requirements.txt
 
-# 3. Start development server
+# 3. Start Python API server (in background)
+python3 backend/app.py &
+
+# 4. Start development server
 npm run dev
 ```
 
@@ -129,29 +131,36 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-os_project/
+cpu-scheduling-visualizer/
 ├── src/
-│   ├── c/                    # C source files (compiled to WebAssembly)
-│   │   ├── process.c         # Process data structures
-│   │   ├── process.h
-│   │   ├── scheduler.c       # Core scheduling algorithms
-│   │   ├── scheduler.h
-│   │   ├── wasm_bindings.c   # JavaScript/Wasm bridge
-│   │   ├── terminal_ui.c     # Terminal display functions
-│   │   ├── terminal_ui.h
-│   │   └── main_terminal.c   # Terminal entry point
-│   ├── components/           # React components
-│   ├── App.jsx               # Main React application
-│   └── App.css               # Styles
+│   ├── components/                 # React components
+│   │   ├── AlgorithmSelector.jsx   # Algorithm picker
+│   │   ├── ControlPanel.jsx        # Play/pause/step controls
+│   │   ├── GanttChart.jsx          # Gantt chart visualization
+│   │   ├── MetricsDashboard.jsx    # Performance metrics
+│   │   ├── ProcessForm.jsx         # Add process form
+│   │   ├── ProcessTable.jsx        # Process state table
+│   │   └── ReadyQueue.jsx          # Ready queue display
+│   ├── hooks/
+│   │   └── useScheduler.js         # Scheduling engine (JavaScript)
+│   ├── pages/
+│   │   ├── LandingPage.jsx         # Home page
+│   │   └── SimulatorPage.jsx       # Main simulator
+│   ├── App.jsx                     # Main React application
+│   ├── main.jsx                    # Entry point
+│   └── index.css                   # Styles
+├── backend/
+│   ├── app.py                      # Flask REST API server
+│   ├── scheduler.py                # Core scheduling engine (Python)
+│   ├── process.py                  # Process Control Block
+│   ├── algorithms.py               # All scheduling algorithms
+│   ├── terminal_ui.py              # Terminal mode visualizer
+│   └── requirements.txt            # Python dependencies
 ├── public/
-│   ├── scheduler.js          # Generated Wasm glue code
-│   └── scheduler.wasm        # Compiled WebAssembly binary
-├── bin/
-│   └── scheduler_terminal    # Terminal executable (after build)
-├── Makefile                  # Build configuration for Wasm + Terminal
-├── install.sh                # One-command setup script
-├── package.json              # Node.js dependencies
-└── README.md                 # This file
+│   └── vite.svg                    # Vite logo
+├── install.sh                      # One-command setup script
+├── package.json                    # Node.js dependencies
+└── README.md                       # This file
 ```
 
 ---
@@ -182,6 +191,7 @@ os_project/
   - Throughput
 - **Customizable Processes**: Add processes with custom arrival time, burst time, and priority
 - **Aging Support**: Prevent starvation with priority boosting
+- **Python API**: REST API for programmatic access to the scheduler
 
 ---
 
@@ -191,37 +201,41 @@ os_project/
 |---------|-------------|
 | `./install.sh` | Full installation and run (web mode) |
 | `./install.sh --terminal` | Build and run terminal mode |
-| `npm run dev` | Start development server |
+| `npm run dev` | Start Vite development server |
 | `npm run build` | Build for production |
 | `npm run preview` | Preview production build |
-| `make` | Compile C to WebAssembly |
-| `make terminal` | Build terminal executable |
-| `make clean` | Remove compiled Wasm files |
-| `make clean-all` | Remove all build artifacts |
-| `make debug` | Build Wasm with debug symbols |
+| `python3 backend/app.py` | Start Python API server |
+| `python3 backend/terminal_ui.py` | Run terminal visualizer |
 
 ---
 
 ## 🐛 Troubleshooting
 
-### `emcc: command not found`
-Emscripten is not installed or not in your PATH. Run:
+### Python 3 not found
+Install Python 3:
 ```bash
-brew install emscripten  # macOS
-# OR
-source /path/to/emsdk/emsdk_env.sh  # Linux
+brew install python3          # macOS
+sudo apt install python3      # Linux
 ```
 
-### WebAssembly module fails to load
-Ensure you've run `make` to compile the C code:
+### Flask module not found
+Make sure you've installed Python dependencies:
 ```bash
-make clean && make
+source backend/venv/bin/activate
+pip install -r backend/requirements.txt
 ```
 
 ### Port 3000 already in use
 Kill the existing process or use a different port:
 ```bash
 npm run dev -- --port 3001
+```
+
+### Port 5000 already in use (API)
+Kill the existing process:
+```bash
+lsof -ti:5001 | xargs kill
+python3 backend/app.py
 ```
 
 ---
@@ -235,5 +249,5 @@ MIT License - feel free to use this for educational purposes!
 ## 🙏 Acknowledgments
 
 - Built for Operating Systems coursework
-- WebAssembly powered by [Emscripten](https://emscripten.org/)
+- Backend powered by [Python](https://python.org/) + [Flask](https://flask.palletsprojects.com/)
 - Frontend powered by [React](https://react.dev/) + [Vite](https://vite.dev/)
