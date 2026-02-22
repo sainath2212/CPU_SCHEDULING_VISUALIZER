@@ -17,12 +17,12 @@ A real-time, interactive CPU scheduling simulator built with **React + Vite** (f
 ```
 
 The script will:
-1. ✅ Check / install **Homebrew** (macOS only)
-2. ✅ Check / install **Node.js**
-3. ✅ Check / install **Python 3**
-4. ✅ Install Node.js dependencies (`npm install`)
-5. ✅ Create a Python virtual environment and install Flask
-6. ✅ Start the Flask API server and the Vite dev server
+1. Check / install **Homebrew** (macOS only)
+2. Check / install **Node.js**
+3. Check / install **Python 3**
+4. Install Node.js dependencies (`npm install`)
+5. Create a Python virtual environment and install Flask
+6. Start the Flask API server and the Vite dev server
 
 Once running, open: **http://localhost:5173/**
 
