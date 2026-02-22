@@ -227,7 +227,7 @@ MIT License — free to use for educational purposes.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built for Operating Systems coursework
 - Backend: [Python](https://python.org/) + [Flask](https://flask.palletsprojects.com/)
