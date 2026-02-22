@@ -200,7 +200,7 @@ print_step "Starting development servers..."
 
 echo -e "\n${GREEN}============================================================${NC}"
 echo -e "${GREEN}  CPU Scheduling Visualizer is starting!${NC}"
-echo -e "${GREEN}  Frontend: http://localhost:3000/${NC}"
+echo -e "${GREEN}  Frontend: http://localhost:5173/${NC}"
 echo -e "${GREEN}  Backend API: http://localhost:5001/${NC}"
 echo -e "${GREEN}============================================================${NC}\n"
 
