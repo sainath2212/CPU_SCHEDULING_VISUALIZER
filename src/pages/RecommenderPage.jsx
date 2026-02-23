@@ -203,7 +203,7 @@ export default function RecommenderPage() {
                                         color: 'var(--color-kernel-text-dim)', fontSize: '0.95rem',
                                         margin: 0, lineHeight: 1.6,
                                     }}>
-                                        Click <strong style={{ color: '#874F41' }}>"Get Recommendation"</strong> above to let our AI analyze your workload and suggest the best scheduling algorithm.
+                                        Click <strong style={{ color: '#E64833' }}>"Get Recommendation"</strong> above to let our AI analyze your workload and suggest the best scheduling algorithm.
                                     </p>
                                 </div>
                             </motion.div>
