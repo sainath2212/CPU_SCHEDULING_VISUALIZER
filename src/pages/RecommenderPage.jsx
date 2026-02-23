@@ -59,7 +59,7 @@ export default function RecommenderPage() {
                         </svg>
                     </div>
                     <div>
-                        <h1 className="page-hero-title">AI <GlowText color="#874F41"> Recommender</GlowText></h1>
+                        <h1 className="page-hero-title">AI <GlowText color="#E64833"> Recommender</GlowText></h1>
                         <p className="page-hero-subtitle">ML-powered algorithm selection using RandomForest</p>
                     </div>
                 </div>
