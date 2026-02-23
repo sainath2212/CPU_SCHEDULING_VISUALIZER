@@ -12,7 +12,7 @@ import {
 import { useProcesses } from '../context/ProcessContext';
 import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText } from '../components/AceternityUI';
 
-const API = '/api/v2';
+const API = 'https://cpu-scheduling-visualizer-euxn.onrender.com/api/v2';
 const ALGO_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 const METRICS = [

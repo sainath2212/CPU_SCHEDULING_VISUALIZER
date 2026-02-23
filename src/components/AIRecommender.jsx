@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { useProcesses } from '../context/ProcessContext';
 import { BrainIcon, TrophyIcon } from '../components/Icons';
 
-const API_BASE = 'http://localhost:5001';
+const API_BASE = 'https://cpu-scheduling-visualizer-euxn.onrender.com';
 
 const ALGO_COLORS = [
     '#6366f1', '#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'

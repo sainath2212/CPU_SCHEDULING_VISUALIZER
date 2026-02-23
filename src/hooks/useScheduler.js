@@ -29,7 +29,7 @@ export const ALGORITHM_DESCRIPTIONS = {
   7: 'Multi-Level Feedback Queue',
 };
 
-const API = '/api/v2';
+const API = 'https://cpu-scheduling-visualizer-euxn.onrender.com/api/v2';
 
 const emptyMetrics = {
   avgWaitTime: 0, avgTurnaroundTime: 0, avgResponseTime: 0,
