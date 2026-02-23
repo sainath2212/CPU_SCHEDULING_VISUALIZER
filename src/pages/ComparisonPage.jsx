@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import { useProcesses } from '../context/ProcessContext';
 import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText } from '../components/AceternityUI';
+import { MagicButton } from '../components/MagicButton';
 
 const API = 'https://cpu-scheduling-visualizer-euxn.onrender.com/api/v2';
 const ALGO_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
@@ -113,7 +114,7 @@ export default function ComparisonPage() {
                 {masterWorkload.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '3rem' }}>
                         <p style={{ color: 'var(--color-kernel-text-dim)', marginBottom: '1rem' }}>Add processes first.</p>
-                        <button className="btn btn-primary" onClick={loadSampleProcesses}>Load Samples</button>
+                        <MagicButton onClick={loadSampleProcesses}>Load Samples</MagicButton>
                     </div>
                 ) : (
                     <>
@@ -124,19 +125,17 @@ export default function ComparisonPage() {
                                 ))}
                             </div>
                             <div style={{ flex: 1 }} />
-                            <motion.button
-                                className="btn btn-primary"
-                                onClick={runComparison}
-                                disabled={loading}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                {loading ? 'Running all 8...' : 'Compare All'}
-                            </motion.button>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <MagicButton onClick={runComparison} disabled={loading}>
+                                    {loading ? 'Running all 8...' : 'Compare All'}
+                                </MagicButton>
+                            </motion.div>
                             {results && (
-                                <motion.button className="btn btn-secondary" onClick={exportCSV} whileHover={{ scale: 1.05 }}>
-                                    Export CSV
-                                </motion.button>
+                                <motion.div whileHover={{ scale: 1.05 }}>
+                                    <MagicButton onClick={exportCSV}>
+                                        Export CSV
+                                    </MagicButton>
+                                </motion.div>
                             )}
                         </div>
 

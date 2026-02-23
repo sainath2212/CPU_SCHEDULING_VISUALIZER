@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useProcesses } from '../context/ProcessContext';
-import { Card3D, SpotlightCard, AnimatedBorderCard, DotGrid, FloatingParticles, GlowText, AnimatedNumber } from '../components/AceternityUI';
+import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText } from '../components/AceternityUI';
+import { MagicButton } from '../components/MagicButton';
 
 const API = 'https://cpu-scheduling-visualizer-euxn.onrender.com/api/v2';
 const ALGO_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
@@ -58,8 +59,8 @@ export default function RecommenderPage() {
                         </svg>
                     </div>
                     <div>
-                        <h1 className="page-hero-title">AI <GlowText color="#874F41">Recommender</GlowText></h1>
-                        <p className="page-hero-subtitle">ML-powered algorithm selection using RandomForest (includes MLFQ)</p>
+                        <h1 className="page-hero-title">AI <GlowText color="#874F41"> Recommender</GlowText></h1>
+                        <p className="page-hero-subtitle">ML-powered algorithm selection using RandomForest</p>
                     </div>
                 </div>
 
@@ -98,7 +99,7 @@ export default function RecommenderPage() {
                                 }}>
                                     Load some processes to get started with AI-powered algorithm recommendation.
                                 </p>
-                                <button className="btn btn-primary" onClick={loadSampleProcesses}>Load Samples</button>
+                                <MagicButton onClick={loadSampleProcesses}>Load Samples</MagicButton>
                             </div>
                         </motion.div>
                     </div>
@@ -111,15 +112,11 @@ export default function RecommenderPage() {
                                 ))}
                             </div>
                             <div style={{ flex: 1 }} />
-                            <motion.button
-                                className="btn btn-primary"
-                                onClick={predict}
-                                disabled={loading}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                {loading ? 'Analyzing...' : 'Get Recommendation'}
-                            </motion.button>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <MagicButton onClick={predict} disabled={loading}>
+                                    {loading ? 'Analyzing...' : 'Get Recommendation'}
+                                </MagicButton>
+                            </motion.div>
                         </div>
 
                         {error && <div className="error-text" style={{ marginTop: '1rem' }}>{error}</div>}

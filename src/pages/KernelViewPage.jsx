@@ -13,6 +13,7 @@ import {
     CpuChip3D, SpotlightCard, AnimatedBorderCard,
     DotGrid, FloatingParticles, GlowText, BeamLine, AnimatedNumber,
 } from '../components/AceternityUI';
+import { MagicButton } from '../components/MagicButton';
 
 const PROC_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
@@ -249,7 +250,7 @@ export default function KernelViewPage() {
                         <p style={{ color: 'var(--color-kernel-text-dim)', marginBottom: '1.5rem' }}>
                             Add processes in the Simulator tab or load sample data.
                         </p>
-                        <button className="btn btn-primary" onClick={loadSampleProcesses}>Load Sample Processes</button>
+                        <MagicButton onClick={loadSampleProcesses}>Load Sample Processes</MagicButton>
                     </div>
                 ) : (
                     <div className="page-container">

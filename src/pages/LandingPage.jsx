@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
+import { MagicButton } from '../components/MagicButton';
 import { Card3D, SpotlightCard, FloatingParticles, Meteors, GlowText, BeamLine } from '../components/AceternityUI';
 
 const algorithms = [
@@ -42,6 +43,8 @@ const itemVariants = {
 };
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="landing-spline-wrapper">
       {/* Fixed Spline background for entire page */}
@@ -74,9 +77,9 @@ export default function LandingPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Link to="/simulator" className="spline-nav-cta">
-              Launch Simulator <span>→</span>
-            </Link>
+            <MagicButton onClick={() => navigate('/simulator')} className="rounded-full">
+              Launch Simulator <span style={{ marginLeft: '4px' }}>→</span>
+            </MagicButton>
           </motion.div>
         </nav>
 
@@ -115,15 +118,15 @@ export default function LandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
           >
-            <Link to="/simulator" className="spline-hero-cta">
+            <MagicButton onClick={() => navigate('/simulator')} className="rounded-full" innerClassName="px-8 py-4 text-base font-bold">
               Open Simulator
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '8px' }}>
                 <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
               </svg>
-            </Link>
-            <Link to="/kernel" className="spline-hero-cta-secondary">
+            </MagicButton>
+            <MagicButton onClick={() => navigate('/kernel')} className="rounded-full opacity-80 hover:opacity-100" innerClassName="px-8 py-4 text-base">
               Kernel View
-            </Link>
+            </MagicButton>
           </motion.div>
         </div>
 
@@ -248,11 +251,10 @@ export default function LandingPage() {
             viewport={{ once: true, margin: '-50px' }}
           >
             {algorithms.map((algo, i) => (
-              <motion.div key={i} variants={itemVariants}>
-                <SpotlightCard spotlightColor={algo.color}>
+              <motion.div key={i} variants={itemVariants} className="h-full">
+                <SpotlightCard spotlightColor={algo.color} className="h-full">
                   <div className="algo-card" style={{
                     borderColor: algo.color,
-                    borderLeft: `3px solid ${algo.color}`,
                     padding: '1.25rem',
                   }}>
                     <div className="algo-card-header">
@@ -287,23 +289,21 @@ export default function LandingPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to="/simulator" className="btn-hero-primary">
+            <MagicButton onClick={() => navigate('/simulator')} className="rounded-full" innerClassName="px-8 py-3 text-lg font-bold">
               Launch Now →
-            </Link>
+            </MagicButton>
           </motion.div>
         </section>
 
         <footer className="footer" style={{ padding: '2rem', textAlign: 'center', borderTop: '1px solid rgba(68,68,68,0.2)', marginTop: '4rem' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-            <a href="https://github.com/sainath2212/CPU_SCHEDULING_VISUALIZER" target="_blank" rel="noreferrer"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#B0B0B0', textDecoration: 'none', fontWeight: 600, transition: 'color 0.2s' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#E0E0E0'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#B0B0B0'}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-              </svg>
-              View on GitHub
+            <a href="https://github.com/sainath2212/CPU_SCHEDULING_VISUALIZER" target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+              <MagicButton className="rounded-full" innerClassName="px-6 py-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}>
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+                View on GitHub
+              </MagicButton>
             </a>
             <span style={{ color: 'var(--color-kernel-text-muted)', fontSize: '0.8rem' }}>
               CPU Scheduling Kernel Visualizer — Built with React, Python, and Machine Learning

@@ -5,6 +5,7 @@ import {
 import { useState } from 'react';
 import { useProcesses } from '../context/ProcessContext';
 import { CompareIcon, PlayIcon, DownloadIcon } from '../components/Icons';
+import { MagicButton } from '../components/MagicButton';
 
 const API_BASE = 'https://cpu-scheduling-visualizer-euxn.onrender.com';
 
@@ -106,19 +107,18 @@ export default function ComparisonDashboard() {
 
             {/* Action Bar */}
             <div className="controls-bar">
-                <button
-                    className="btn-primary"
+                <MagicButton
                     onClick={runComparison}
                     disabled={loading || processes.length === 0}
                 >
-                    <CompareIcon size={14} />
+                    <CompareIcon size={14} style={{ marginRight: '6px' }} />
                     {loading ? 'Running all algorithms...' : 'Compare All Algorithms'}
-                </button>
+                </MagicButton>
                 {results && (
-                    <button className="btn-secondary btn-export" onClick={exportCSV}>
-                        <DownloadIcon size={14} />
+                    <MagicButton onClick={exportCSV}>
+                        <DownloadIcon size={14} style={{ marginRight: '6px' }} />
                         Export CSV
-                    </button>
+                    </MagicButton>
                 )}
                 {error && <span className="error-text">{error}</span>}
             </div>

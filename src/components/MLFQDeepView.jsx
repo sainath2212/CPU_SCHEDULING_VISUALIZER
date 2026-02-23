@@ -193,10 +193,11 @@ function QueueLevel({ config, pids, runningPid, index }) {
                                         {i > 0 && (
                                             <motion.span
                                                 style={{
-                                                    fontSize: '0.9rem', color: `${color}44`,
-                                                    margin: '0 2px', display: 'inline-block',
+                                                    fontSize: '1rem', color: color,
+                                                    margin: '0 4px', display: 'inline-block',
+                                                    fontWeight: 'bold'
                                                 }}
-                                                animate={{ opacity: [0.3, 0.7, 0.3] }}
+                                                animate={{ opacity: [0.6, 1, 0.6] }}
                                                 transition={{ duration: 1.5, repeat: Infinity }}
                                             >
                                                 →

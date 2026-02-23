@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { MagicButton } from '../components/MagicButton';
 
 export default function ProcessForm({ onAddProcess, onAddSample, disabled }) {
     const [arrival, setArrival] = useState('');
@@ -52,15 +53,17 @@ export default function ProcessForm({ onAddProcess, onAddSample, disabled }) {
                 </div>
 
                 <div className="btn-group" style={{ marginTop: '0.5rem' }}>
-                    <button type="submit" className="btn btn-primary" disabled={disabled} style={{ flex: 1 }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                        Add
-                    </button>
-                    <button type="button" className="btn btn-secondary" onClick={onAddSample} disabled={disabled}>
+                    <div style={{ flex: 1, display: 'flex' }}>
+                        <MagicButton type="submit" disabled={disabled} className="w-full">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '6px' }}>
+                                <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Add
+                        </MagicButton>
+                    </div>
+                    <MagicButton type="button" onClick={onAddSample} disabled={disabled}>
                         Sample
-                    </button>
+                    </MagicButton>
                 </div>
             </form>
         </div>

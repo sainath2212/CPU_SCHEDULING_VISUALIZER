@@ -12,6 +12,7 @@ import { useProcesses } from '../context/ProcessContext';
 import useScheduler, { ALGORITHM_NAMES } from '../hooks/useScheduler';
 import ControlPanel from '../components/ControlPanel';
 import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText, AnimatedNumber } from '../components/AceternityUI';
+import { MagicButton } from '../components/MagicButton';
 
 const CHART_THEME = {
     grid: 'rgba(144,174,173,0.1)',
@@ -98,95 +99,95 @@ export default function AnalyticsPage() {
             />
 
             <div style={{ minHeight: '100vh', position: 'relative' }}>
-            <DotGrid />
-            <FloatingParticles count={6} />
+                <DotGrid />
+                <FloatingParticles count={6} />
 
-            <div style={{ position: 'relative', zIndex: 1 }}>
-                <ControlPanel
-                    currentTime={state.currentTime}
-                    isRunning={isRunning}
-                    isCompleted={state.isCompleted}
-                    processCount={masterWorkload.length}
-                    speed={speed}
-                    onStart={start}
-                    onPause={pause}
-                    onStep={step}
-                    onReset={() => { resetFromMaster(); resetSim(); }}
-                    onClear={clearProcesses}
-                    onSpeedChange={setSpeed}
-                    onRunToEnd={runToEnd}
-                />
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <ControlPanel
+                        currentTime={state.currentTime}
+                        isRunning={isRunning}
+                        isCompleted={state.isCompleted}
+                        processCount={masterWorkload.length}
+                        speed={speed}
+                        onStart={start}
+                        onPause={pause}
+                        onStep={step}
+                        onReset={() => { resetFromMaster(); resetSim(); }}
+                        onClear={clearProcesses}
+                        onSpeedChange={setSpeed}
+                        onRunToEnd={runToEnd}
+                    />
 
-                <div className="page-container">
-                    <div className="page-hero">
-                        <div className="page-hero-icon-wrapper" style={{ background: 'rgba(230,72,51,0.1)', border: '1px solid rgba(230,72,51,0.2)' }}>
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E64833" strokeWidth="1.5">
-                                <path d="M3 3v18h18" /><path d="M7 16l4-8 4 4 5-10" />
-                            </svg>
+                    <div className="page-container">
+                        <div className="page-hero">
+                            <div className="page-hero-icon-wrapper" style={{ background: 'rgba(230,72,51,0.1)', border: '1px solid rgba(230,72,51,0.2)' }}>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E64833" strokeWidth="1.5">
+                                    <path d="M3 3v18h18" /><path d="M7 16l4-8 4 4 5-10" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 className="page-hero-title"><GlowText color="#E64833">Analytics</GlowText></h1>
+                                <p className="page-hero-subtitle">
+                                    Real-time performance metrics — {ALGORITHM_NAMES[algorithm]} — <AnimatedNumber value={history.length} /> ticks recorded
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="page-hero-title"><GlowText color="#E64833">Analytics</GlowText></h1>
-                            <p className="page-hero-subtitle">
-                                Real-time performance metrics — {ALGORITHM_NAMES[algorithm]} — <AnimatedNumber value={history.length} /> ticks recorded
-                            </p>
-                        </div>
-                    </div>
 
-                    {/* Live stats banner */}
-                    {state.metrics && (
-                        <SpotlightCard spotlightColor="#E64833">
-                            <div style={{
-                                padding: '0.75rem 1rem', display: 'flex', alignItems: 'center',
-                                justifyContent: 'space-around', flexWrap: 'wrap', gap: '0.5rem',
-                            }}>
-                                {[
-                                    { label: 'CPU %', value: state.metrics.cpuUtilization ?? 0, color: '#E64833' },
-                                    { label: 'Avg Wait', value: state.metrics.avgWaitTime ?? 0, color: '#B0B0B0' },
-                                    { label: 'Throughput', value: state.metrics.throughput ?? 0, color: '#34d399' },
-                                    { label: 'Switches', value: state.contextSwitches ?? 0, color: '#fbbf24' },
-                                ].map(({ label, value, color }) => (
-                                    <div key={label} style={{ textAlign: 'center' }}>
-                                        <div style={{
-                                            fontFamily: "'JetBrains Mono', monospace",
-                                            fontWeight: 800, fontSize: '1.1rem', color,
-                                        }}>
-                                            <AnimatedNumber value={value} />
+                        {/* Live stats banner */}
+                        {state.metrics && (
+                            <SpotlightCard spotlightColor="#E64833">
+                                <div style={{
+                                    padding: '0.75rem 1rem', display: 'flex', alignItems: 'center',
+                                    justifyContent: 'space-around', flexWrap: 'wrap', gap: '0.5rem',
+                                }}>
+                                    {[
+                                        { label: 'CPU %', value: state.metrics.cpuUtilization ?? 0, color: '#E64833' },
+                                        { label: 'Avg Wait', value: state.metrics.avgWaitTime ?? 0, color: '#B0B0B0' },
+                                        { label: 'Throughput', value: state.metrics.throughput ?? 0, color: '#34d399' },
+                                        { label: 'Switches', value: state.contextSwitches ?? 0, color: '#fbbf24' },
+                                    ].map(({ label, value, color }) => (
+                                        <div key={label} style={{ textAlign: 'center' }}>
+                                            <div style={{
+                                                fontFamily: "'JetBrains Mono', monospace",
+                                                fontWeight: 800, fontSize: '1.1rem', color,
+                                            }}>
+                                                <AnimatedNumber value={value} />
+                                            </div>
+                                            <div style={{
+                                                fontSize: '0.5rem', fontWeight: 600, color: 'var(--color-kernel-text-muted)',
+                                                textTransform: 'uppercase', letterSpacing: '0.08em',
+                                            }}>
+                                                {label}
+                                            </div>
                                         </div>
-                                        <div style={{
-                                            fontSize: '0.5rem', fontWeight: 600, color: 'var(--color-kernel-text-muted)',
-                                            textTransform: 'uppercase', letterSpacing: '0.08em',
-                                        }}>
-                                            {label}
-                                        </div>
-                                    </div>
+                                    ))}
+                                </div>
+                            </SpotlightCard>
+                        )}
+
+                        {masterWorkload.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '3rem' }}>
+                                <p style={{ color: 'var(--color-kernel-text-dim)', marginBottom: '1rem' }}>
+                                    Add processes in the Simulator to see live analytics.
+                                </p>
+                                <MagicButton onClick={loadSampleProcesses}>Load Samples</MagicButton>
+                            </div>
+                        ) : (
+                            <div className="charts-grid" style={{ marginTop: '1rem' }}>
+                                {charts.map(({ key, title, type, color, glow }, i) => (
+                                    <motion.div
+                                        key={key}
+                                        initial={{ opacity: 0, y: 30, rotateX: 10 }}
+                                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                                        transition={{ delay: i * 0.08, type: 'spring', stiffness: 80 }}
+                                    >
+                                        <ChartCard title={title} data={history} dataKey={key} type={type} color={color} glow={glow} />
+                                    </motion.div>
                                 ))}
                             </div>
-                        </SpotlightCard>
-                    )}
-
-                    {masterWorkload.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '3rem' }}>
-                            <p style={{ color: 'var(--color-kernel-text-dim)', marginBottom: '1rem' }}>
-                                Add processes in the Simulator to see live analytics.
-                            </p>
-                            <button className="btn btn-primary" onClick={loadSampleProcesses}>Load Samples</button>
-                        </div>
-                    ) : (
-                        <div className="charts-grid" style={{ marginTop: '1rem' }}>
-                            {charts.map(({ key, title, type, color, glow }, i) => (
-                                <motion.div
-                                    key={key}
-                                    initial={{ opacity: 0, y: 30, rotateX: 10 }}
-                                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                                    transition={{ delay: i * 0.08, type: 'spring', stiffness: 80 }}
-                                >
-                                    <ChartCard title={title} data={history} dataKey={key} type={type} color={color} glow={glow} />
-                                </motion.div>
-                            ))}
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     );
