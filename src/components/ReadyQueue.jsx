@@ -1,99 +1,94 @@
 /**
- * Ready Queue Component
- * Visual representation of the ready queue
+ * ReadyQueue — Shows waiting processes.
+ * For MLFQ: uses the deep MLFQDeepView.
+ * For other algorithms: animated horizontal queue with SpotlightCard.
  */
 
-const PROCESS_COLORS = [
-    'var(--process-0)',
-    'var(--process-1)',
-    'var(--process-2)',
-    'var(--process-3)',
-    'var(--process-4)',
-    'var(--process-5)',
-    'var(--process-6)',
-    'var(--process-7)',
-];
+import { motion, AnimatePresence } from 'framer-motion';
+import { SpotlightCard } from './AceternityUI';
+import MLFQDeepView from './MLFQDeepView';
 
-export default function ReadyQueue({ queue, runningPid }) {
+const PROC_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
+
+export default function ReadyQueue({ queue, runningPid, algorithm, mlfqState }) {
+    const isMLFQ = algorithm === 7;
+
+    if (isMLFQ) {
+        return (
+            <SpotlightCard spotlightColor="#E64833">
+                <div style={{ padding: '1rem' }}>
+                    <MLFQDeepView mlfqState={mlfqState} runningPid={runningPid} />
+                </div>
+            </SpotlightCard>
+        );
+    }
+
     return (
-        <div className="card">
-            <div className="card-header">
-                <h3 className="card-title">
-                    <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <line x1="8" y1="6" x2="21" y2="6" />
-                        <line x1="8" y1="12" x2="21" y2="12" />
-                        <line x1="8" y1="18" x2="21" y2="18" />
-                        <line x1="3" y1="6" x2="3.01" y2="6" />
-                        <line x1="3" y1="12" x2="3.01" y2="12" />
-                        <line x1="3" y1="18" x2="3.01" y2="18" />
-                    </svg>
-                    Ready Queue
-                </h3>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    {queue.length} waiting
-                </span>
-            </div>
-
-            <div className="ready-queue-row" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                {/* Running process */}
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{
-                        fontSize: '0.7rem',
-                        color: 'var(--text-muted)',
-                        marginBottom: '4px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em'
-                    }}>
-                        CPU
-                    </div>
-                    <div style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: 'var(--radius-md)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: '600',
-                        fontSize: '0.9rem',
-                        color: 'white',
-                        background: runningPid !== -1
-                            ? PROCESS_COLORS[runningPid % 8]
-                            : 'var(--bg-tertiary)',
-                        boxShadow: runningPid !== -1
-                            ? '0 0 20px ' + PROCESS_COLORS[runningPid % 8]
-                            : 'none',
-                        transition: 'all 0.3s ease'
-                    }}>
-                        {runningPid !== -1 ? `P${runningPid}` : 'IDLE'}
-                    </div>
+        <SpotlightCard>
+            <div style={{ padding: '1rem' }}>
+                <div className="card-header">
+                    <h3 className="card-title">
+                        <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" />
+                            <line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" />
+                            <line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+                        </svg>
+                        Ready Queue
+                    </h3>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--color-kernel-text-dim)' }}>
+                        {queue?.length ?? 0} waiting
+                    </span>
                 </div>
 
-                <div style={{
-                    fontSize: '1.5rem',
-                    color: 'var(--text-muted)'
-                }}>
-                    ←
-                </div>
+                <div className="ready-queue-visual">
+                    {runningPid >= 0 && (
+                        <>
+                            <motion.div
+                                className="queue-item"
+                                style={{
+                                    backgroundColor: PROC_COLORS[runningPid % 8],
+                                    border: '2px solid var(--color-kernel-active)',
+                                    boxShadow: `0 0 20px ${PROC_COLORS[runningPid % 8]}44`,
+                                }}
+                                layout
+                                whileHover={{ scale: 1.15 }}
+                            >
+                                P{runningPid}
+                            </motion.div>
+                            <motion.span
+                                className="queue-arrow"
+                                animate={{ x: [0, 4, 0] }}
+                                transition={{ duration: 1, repeat: Infinity }}
+                            >→</motion.span>
+                        </>
+                    )}
 
-                {/* Queue */}
-                <div className="ready-queue-visual" style={{ flex: 1 }}>
-                    {queue.length === 0 ? (
-                        <span className="queue-empty">Queue is empty</span>
-                    ) : (
-                        queue.map((pid, index) => (
-                            <div key={`${pid}-${index}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                {index > 0 && <span className="queue-arrow">→</span>}
-                                <div
+                    <AnimatePresence>
+                        {(!queue || queue.length === 0) && runningPid < 0 ? (
+                            <span className="queue-empty">Queue is empty</span>
+                        ) : (
+                            queue?.map(pid => (
+                                <motion.div
+                                    key={pid}
                                     className="queue-item"
-                                    style={{ backgroundColor: PROCESS_COLORS[pid % 8] }}
+                                    style={{
+                                        backgroundColor: PROC_COLORS[pid % 8],
+                                        boxShadow: `0 4px 12px rgba(0,0,0,0.3)`,
+                                    }}
+                                    initial={{ scale: 0, rotateY: 90, opacity: 0 }}
+                                    animate={{ scale: 1, rotateY: 0, opacity: 1 }}
+                                    exit={{ scale: 0, rotateY: -90, opacity: 0 }}
+                                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                                    whileHover={{ scale: 1.15, y: -4 }}
+                                    layout
                                 >
                                     P{pid}
-                                </div>
-                            </div>
-                        ))
-                    )}
+                                </motion.div>
+                            ))
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
-        </div>
+        </SpotlightCard>
     );
 }
