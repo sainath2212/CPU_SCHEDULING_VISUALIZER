@@ -91,6 +91,31 @@ export default function RecommenderPage() {
                                 />
                                 {/* Transparent overlay to block iframe scroll/interaction */}
                                 <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'default' }} />
+                                {/* Greeting Bubble */}
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 1, type: 'spring', bounce: 0.5 }}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '25%',
+                                        left: '58%',
+                                        background: 'rgba(255, 255, 255, 0.1)',
+                                        backdropFilter: 'blur(8px)',
+                                        WebkitBackdropFilter: 'blur(8px)',
+                                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                                        color: '#E0E0E0',
+                                        padding: '0.6rem 1.2rem',
+                                        borderRadius: '1rem 1rem 1rem 0',
+                                        fontSize: '1.2rem',
+                                        fontWeight: 600,
+                                        zIndex: 20,
+                                        pointerEvents: 'none',
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                                    }}
+                                >
+                                    Hi This Is Groot!!! 👋
+                                </motion.div>
                             </div>
                             <div style={{ padding: '1.5rem', textAlign: 'center' }}>
                                 <p style={{
@@ -147,6 +172,31 @@ export default function RecommenderPage() {
                                     />
                                     {/* Transparent overlay to block iframe scroll/interaction */}
                                     <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'default' }} />
+                                    {/* Greeting Bubble */}
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 1, type: 'spring', bounce: 0.5 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '25%',
+                                            left: '58%',
+                                            background: 'rgba(255, 255, 255, 0.1)',
+                                            backdropFilter: 'blur(8px)',
+                                            WebkitBackdropFilter: 'blur(8px)',
+                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            color: '#E0E0E0',
+                                            padding: '0.6rem 1.2rem',
+                                            borderRadius: '1rem 1rem 1rem 0',
+                                            fontSize: '1.2rem',
+                                            fontWeight: 600,
+                                            zIndex: 20,
+                                            pointerEvents: 'none',
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        Hi This Is Groot!!! 👋
+                                    </motion.div>
                                 </div>
                                 <div style={{ padding: '1.5rem', textAlign: 'center' }}>
                                     <p style={{
