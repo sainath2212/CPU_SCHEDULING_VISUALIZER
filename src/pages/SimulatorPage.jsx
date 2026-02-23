@@ -124,9 +124,9 @@ export default function SimulatorPage() {
 
           {/* Visualization area */}
           <div className="visualization-area">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ minWidth: 0 }}>
               <SpotlightCard>
-                <div style={{ padding: '0' }}>
+                <div style={{ padding: '0', minWidth: 0 }}>
                   <GanttChart gantt={state.gantt} currentTime={state.currentTime} />
                 </div>
               </SpotlightCard>
