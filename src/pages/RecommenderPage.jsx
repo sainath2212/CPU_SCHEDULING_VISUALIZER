@@ -52,7 +52,7 @@ export default function RecommenderPage() {
             <div className="page-container" style={{ position: 'relative', zIndex: 1 }}>
                 <div className="page-hero">
                     <div className="page-hero-icon-wrapper" style={{ background: 'rgba(135,79,65,0.1)', border: '1px solid rgba(135,79,65,0.2)' }}>
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#874F41" strokeWidth="1.5">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="##E64833" strokeWidth="1.5">
                             <path d="M12 2a6 6 0 0 1 6 6c0 1.6-.63 3.06-1.65 4.13L12 16.5l-4.35-4.37A5.98 5.98 0 0 1 6 8a6 6 0 0 1 6-6z" />
                             <circle cx="10" cy="8" r="1" /><circle cx="14" cy="8" r="1" />
                             <path d="M12 16.5V22" /><path d="M8 19h8" />
