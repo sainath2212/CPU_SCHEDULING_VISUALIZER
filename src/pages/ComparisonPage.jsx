@@ -13,7 +13,7 @@ import { useProcesses } from '../context/ProcessContext';
 import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText } from '../components/AceternityUI';
 
 const API = 'https://cpu-scheduling-visualizer-euxn.onrender.com/api/v2';
-const ALGO_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
+const ALGO_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 const METRICS = [
     { key: 'avgWaitTime', label: 'Avg Wait Time', unit: 'units', lowerBetter: true },
@@ -28,7 +28,7 @@ const tooltipStyle = {
     border: '1px solid rgba(144,174,173,0.2)',
     borderRadius: '8px',
     fontSize: '0.75rem',
-    color: '#FBE9D0',
+    color: '#E0E0E0',
 };
 
 export default function ComparisonPage() {
@@ -100,12 +100,12 @@ export default function ComparisonPage() {
             <div className="page-container" style={{ position: 'relative', zIndex: 1 }}>
                 <div className="page-hero">
                     <div className="page-hero-icon-wrapper" style={{ background: 'rgba(144,174,173,0.1)', border: '1px solid rgba(144,174,173,0.2)' }}>
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#90AEAD" strokeWidth="1.5">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#B0B0B0" strokeWidth="1.5">
                             <rect x="3" y="12" width="4" height="8" rx="1" /><rect x="10" y="6" width="4" height="14" rx="1" /><rect x="17" y="3" width="4" height="17" rx="1" />
                         </svg>
                     </div>
                     <div>
-                        <h1 className="page-hero-title">Algorithm <GlowText color="#90AEAD">Comparison</GlowText></h1>
+                        <h1 className="page-hero-title">Algorithm <GlowText color="#B0B0B0">Comparison</GlowText></h1>
                         <p className="page-hero-subtitle">Run all 8 algorithms (including MLFQ) on the same workload</p>
                     </div>
                 </div>

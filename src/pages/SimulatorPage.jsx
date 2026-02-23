@@ -104,7 +104,7 @@ export default function SimulatorPage() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ type: 'spring', stiffness: 100, delay: 0.1 }}>
-              <SpotlightCard spotlightColor="#90AEAD">
+              <SpotlightCard spotlightColor="#B0B0B0">
                 <div style={{ padding: '0' }}>
                   <MetricsDashboard
                     metrics={{

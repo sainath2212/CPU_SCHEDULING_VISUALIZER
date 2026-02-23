@@ -14,7 +14,7 @@ import {
     DotGrid, FloatingParticles, GlowText, BeamLine, AnimatedNumber,
 } from '../components/AceternityUI';
 
-const PROC_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
+const PROC_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 function KernelClock({ time }) {
     return (
@@ -34,7 +34,7 @@ function KernelClock({ time }) {
                     style={{
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: '3rem', fontWeight: 900,
-                        background: 'linear-gradient(135deg, #E64833, #90AEAD)',
+                        background: 'linear-gradient(135deg, #E64833, #B0B0B0)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
@@ -58,9 +58,9 @@ function KernelClock({ time }) {
 function KernelStats({ state }) {
     const items = [
         { label: 'Context Sw.', value: state.contextSwitches, color: '#E64833' },
-        { label: 'Ready Queue', value: state.readyQueue?.length ?? 0, color: '#90AEAD' },
+        { label: 'Ready Queue', value: state.readyQueue?.length ?? 0, color: '#B0B0B0' },
         { label: 'Completed', value: state.processes?.filter(p => p.stateName === 'TERMINATED').length ?? 0, color: '#34d399' },
-        { label: 'Total', value: state.processes?.length ?? 0, color: '#FBE9D0' },
+        { label: 'Total', value: state.processes?.length ?? 0, color: '#E0E0E0' },
     ];
     return (
         <SpotlightCard>
@@ -175,7 +175,7 @@ function KernelLog({ log }) {
     };
 
     return (
-        <SpotlightCard spotlightColor="#90AEAD" style={{ flex: 1 }}>
+        <SpotlightCard spotlightColor="#B0B0B0" style={{ flex: 1 }}>
             <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <h3 style={{
                     fontSize: '0.75rem', fontWeight: 700, marginBottom: '0.5rem',

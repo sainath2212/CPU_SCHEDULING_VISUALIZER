@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SpotlightCard } from './AceternityUI';
 import MLFQDeepView from './MLFQDeepView';
 
-const PROC_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
+const PROC_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 export default function ReadyQueue({ queue, runningPid, algorithm, mlfqState }) {
     const isMLFQ = algorithm === 7;

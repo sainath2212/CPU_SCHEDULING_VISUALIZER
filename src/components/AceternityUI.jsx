@@ -145,7 +145,7 @@ export function SpotlightCard({ children, className = '', spotlightColor = '#E64
    ANIMATED BORDER GRADIENT — Rotating conic gradient border
    ═══════════════════════════════════════════════════════════════ */
 
-export function AnimatedBorderCard({ children, className = '', borderColors = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0'] }) {
+export function AnimatedBorderCard({ children, className = '', borderColors = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0'] }) {
     return (
         <div className={className} style={{ position: 'relative', borderRadius: '1rem', padding: '1px' }}>
             <div style={{
@@ -240,7 +240,7 @@ function Particle({ size, x, y, duration, delay, color }) {
 }
 
 export function FloatingParticles({ count = 12 }) {
-    const colors = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5'];
+    const colors = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5'];
     const particles = Array.from({ length: count }, (_, i) => ({
         id: i,
         size: 4 + Math.random() * 12,
@@ -404,12 +404,12 @@ export function CpuChip3D({ isActive, processName, progress = 0, remaining = 0, 
             >
                 {/* Circuit lines */}
                 <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.06 }} viewBox="0 0 200 200">
-                    <line x1="0" y1="50" x2="200" y2="50" stroke="#90AEAD" strokeWidth="0.5" />
-                    <line x1="0" y1="100" x2="200" y2="100" stroke="#90AEAD" strokeWidth="0.5" />
-                    <line x1="0" y1="150" x2="200" y2="150" stroke="#90AEAD" strokeWidth="0.5" />
-                    <line x1="50" y1="0" x2="50" y2="200" stroke="#90AEAD" strokeWidth="0.5" />
-                    <line x1="100" y1="0" x2="100" y2="200" stroke="#90AEAD" strokeWidth="0.5" />
-                    <line x1="150" y1="0" x2="150" y2="200" stroke="#90AEAD" strokeWidth="0.5" />
+                    <line x1="0" y1="50" x2="200" y2="50" stroke="#B0B0B0" strokeWidth="0.5" />
+                    <line x1="0" y1="100" x2="200" y2="100" stroke="#B0B0B0" strokeWidth="0.5" />
+                    <line x1="0" y1="150" x2="200" y2="150" stroke="#B0B0B0" strokeWidth="0.5" />
+                    <line x1="50" y1="0" x2="50" y2="200" stroke="#B0B0B0" strokeWidth="0.5" />
+                    <line x1="100" y1="0" x2="100" y2="200" stroke="#B0B0B0" strokeWidth="0.5" />
+                    <line x1="150" y1="0" x2="150" y2="200" stroke="#B0B0B0" strokeWidth="0.5" />
                     <rect x="70" y="70" width="60" height="60" stroke="#E64833" strokeWidth="1" fill="none" rx="4" opacity="0.5" />
                 </svg>
 
@@ -448,7 +448,7 @@ export function CpuChip3D({ isActive, processName, progress = 0, remaining = 0, 
                             borderRadius: '3px', overflow: 'hidden',
                         }}>
                             <motion.div
-                                style={{ height: '100%', borderRadius: '3px', background: 'linear-gradient(90deg, #E64833, #90AEAD)' }}
+                                style={{ height: '100%', borderRadius: '3px', background: 'linear-gradient(90deg, #E64833, #B0B0B0)' }}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
                                 transition={{ duration: 0.3 }}

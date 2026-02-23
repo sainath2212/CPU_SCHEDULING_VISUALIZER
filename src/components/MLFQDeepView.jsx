@@ -7,11 +7,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { SpotlightCard, BeamLine, GlowText, AnimatedNumber } from './AceternityUI';
 
-const PROC_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
+const PROC_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 const QUEUE_CONFIG = [
     { level: 0, name: 'High Priority', scheduler: 'Round Robin', quantum: 4, color: '#E64833', bgGlow: 'rgba(230,72,51,0.08)' },
-    { level: 1, name: 'Medium Priority', scheduler: 'Round Robin', quantum: 8, color: '#90AEAD', bgGlow: 'rgba(144,174,173,0.06)' },
+    { level: 1, name: 'Medium Priority', scheduler: 'Round Robin', quantum: 8, color: '#B0B0B0', bgGlow: 'rgba(144,174,173,0.06)' },
     { level: 2, name: 'Low Priority', scheduler: 'FCFS', quantum: null, color: '#874F41', bgGlow: 'rgba(135,79,65,0.06)' },
 ];
 
@@ -36,7 +36,7 @@ function ProcessBubble({ pid, isRunning = false, queueLevel = 0 }) {
                 fontFamily: "'JetBrains Mono', monospace",
                 fontWeight: 800,
                 fontSize: '0.8rem',
-                color: '#1a3640',
+                color: '#000000',
                 position: 'relative',
                 cursor: 'default',
                 boxShadow: isRunning

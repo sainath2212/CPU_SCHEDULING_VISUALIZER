@@ -1,8 +1,3 @@
-/**
- * RecommenderPage — AI-powered algorithm recommendation with Aceternity 3D.
- * Now includes MLFQ in the algorithm list.
- */
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
@@ -10,7 +5,7 @@ import { useProcesses } from '../context/ProcessContext';
 import { Card3D, SpotlightCard, AnimatedBorderCard, DotGrid, FloatingParticles, GlowText, AnimatedNumber } from '../components/AceternityUI';
 
 const API = 'https://cpu-scheduling-visualizer-euxn.onrender.com/api/v2';
-const ALGO_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
+const ALGO_COLORS = ['#E64833', '#B0B0B0', '#874F41', '#E0E0E0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 export default function RecommenderPage() {
     const { masterWorkload, quantum, loadSampleProcesses } = useProcesses();
@@ -69,9 +64,43 @@ export default function RecommenderPage() {
                 </div>
 
                 {masterWorkload.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '3rem' }}>
-                        <p style={{ color: 'var(--color-kernel-text-dim)', marginBottom: '1rem' }}>Load processes first.</p>
-                        <button className="btn btn-primary" onClick={loadSampleProcesses}>Load Samples</button>
+                    <div style={{ textAlign: 'center' }}>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            style={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                                marginTop: '1rem', borderRadius: '1rem',
+                                background: 'rgba(144,174,173,0.03)',
+                                border: '1px solid rgba(144,174,173,0.08)',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            <div style={{ width: '100%', height: '400px', position: 'relative', overflow: 'hidden', paddingTop: '1.5rem' }}>
+                                <iframe
+                                    src="https://my.spline.design/genkubgreetingrobot-HdYPwIGwESk7PHpUxGMFuFm0/"
+                                    frameBorder="0"
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 'none', borderRadius: '1rem 1rem 0 0', transform: 'scale(1.4)', transformOrigin: 'center center' }}
+                                    title="AI Robot Greeting"
+                                    allow="autoplay"
+                                    scrolling="no"
+                                />
+                                {/* Transparent overlay to block iframe scroll/interaction */}
+                                <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'default' }} />
+                            </div>
+                            <div style={{ padding: '1.5rem', textAlign: 'center' }}>
+                                <p style={{
+                                    color: 'var(--color-kernel-text-dim)', fontSize: '0.95rem',
+                                    margin: 0, marginBottom: '1rem', lineHeight: 1.6,
+                                }}>
+                                    Load some processes to get started with AI-powered algorithm recommendation.
+                                </p>
+                                <button className="btn btn-primary" onClick={loadSampleProcesses}>Load Samples</button>
+                            </div>
+                        </motion.div>
                     </div>
                 ) : (
                     <>
@@ -94,6 +123,44 @@ export default function RecommenderPage() {
                         </div>
 
                         {error && <div className="error-text" style={{ marginTop: '1rem' }}>{error}</div>}
+
+                        {!prediction && !loading && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6 }}
+                                style={{
+                                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                                    marginTop: '1rem', borderRadius: '1rem',
+                                    background: 'rgba(144,174,173,0.03)',
+                                    border: '1px solid rgba(144,174,173,0.08)',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <div style={{ width: '100%', height: '420px', position: 'relative', overflow: 'hidden', paddingTop: '1.5rem' }}>
+                                    <iframe
+                                        src="https://my.spline.design/genkubgreetingrobot-HdYPwIGwESk7PHpUxGMFuFm0/"
+                                        frameBorder="0"
+                                        width="100%"
+                                        height="100%"
+                                        style={{ border: 'none', borderRadius: '1rem 1rem 0 0', transform: 'scale(1.4)', transformOrigin: 'center center' }}
+                                        title="AI Robot Greeting"
+                                        allow="autoplay"
+                                        scrolling="no"
+                                    />
+                                    {/* Transparent overlay to block iframe scroll/interaction */}
+                                    <div style={{ position: 'absolute', inset: 0, zIndex: 10, cursor: 'default' }} />
+                                </div>
+                                <div style={{ padding: '1.5rem', textAlign: 'center' }}>
+                                    <p style={{
+                                        color: 'var(--color-kernel-text-dim)', fontSize: '0.95rem',
+                                        margin: 0, lineHeight: 1.6,
+                                    }}>
+                                        Click <strong style={{ color: '#874F41' }}>"Get Recommendation"</strong> above to let our AI analyze your workload and suggest the best scheduling algorithm.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
 
                         {prediction && (
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
@@ -159,9 +226,9 @@ export default function RecommenderPage() {
                                                 <BarChart data={probData} layout="vertical">
                                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(144,174,173,0.1)" />
                                                     <XAxis type="number" domain={[0, 100]} tick={{ fill: 'rgba(251,233,208,0.5)', fontSize: 10 }} />
-                                                    <YAxis type="category" dataKey="name" tick={{ fill: '#FBE9D0', fontSize: 10 }} width={80} />
+                                                    <YAxis type="category" dataKey="name" tick={{ fill: '#E0E0E0', fontSize: 10 }} width={80} />
                                                     <Tooltip
-                                                        contentStyle={{ backgroundColor: 'rgba(26,54,64,0.95)', border: '1px solid rgba(144,174,173,0.2)', borderRadius: '8px', fontSize: '0.75rem', color: '#FBE9D0' }}
+                                                        contentStyle={{ backgroundColor: 'rgba(26,54,64,0.95)', border: '1px solid rgba(144,174,173,0.2)', borderRadius: '8px', fontSize: '0.75rem', color: '#E0E0E0' }}
                                                         formatter={(v) => `${v}%`}
                                                     />
                                                     <Bar dataKey="probability" radius={[0, 4, 4, 0]}>
@@ -201,7 +268,7 @@ export default function RecommenderPage() {
                                                             <div style={{
                                                                 fontSize: '0.85rem', fontWeight: 700,
                                                                 fontFamily: "'JetBrains Mono', monospace",
-                                                                color: '#90AEAD', marginTop: '2px',
+                                                                color: '#B0B0B0', marginTop: '2px',
                                                             }}>
                                                                 {typeof val === 'number' ? val.toFixed(2) : val}
                                                             </div>

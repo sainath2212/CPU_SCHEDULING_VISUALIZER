@@ -15,14 +15,14 @@ import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText, AnimatedNu
 
 const CHART_THEME = {
     grid: 'rgba(144,174,173,0.1)',
-    text: '#FBE9D0',
+    text: '#E0E0E0',
     textDim: 'rgba(251,233,208,0.5)',
 };
 
 const charts = [
     { key: 'cpuUtilization', title: 'CPU Utilization (%)', type: 'area', color: '#E64833', glow: 'rgba(230,72,51,0.12)' },
     { key: 'readyQueueLength', title: 'Ready Queue Size', type: 'bar', color: '#874F41', glow: 'rgba(135,79,65,0.12)' },
-    { key: 'avgWaitTime', title: 'Avg Wait Time', type: 'line', color: '#90AEAD', glow: 'rgba(144,174,173,0.12)' },
+    { key: 'avgWaitTime', title: 'Avg Wait Time', type: 'line', color: '#B0B0B0', glow: 'rgba(144,174,173,0.12)' },
     { key: 'throughput', title: 'Throughput', type: 'line', color: '#34d399', glow: 'rgba(52,211,153,0.12)' },
     { key: 'contextSwitches', title: 'Context Switches', type: 'line', color: '#fbbf24', glow: 'rgba(251,191,36,0.12)' },
 ];
@@ -32,7 +32,7 @@ const tooltipStyle = {
     border: '1px solid rgba(144,174,173,0.2)',
     borderRadius: '8px',
     fontSize: '0.75rem',
-    color: '#FBE9D0',
+    color: '#E0E0E0',
 };
 
 function ChartCard({ title, data, dataKey, type, color, glow }) {
@@ -132,7 +132,7 @@ export default function AnalyticsPage() {
                             }}>
                                 {[
                                     { label: 'CPU %', value: state.metrics.cpuUtilization ?? 0, color: '#E64833' },
-                                    { label: 'Avg Wait', value: state.metrics.avgWaitTime ?? 0, color: '#90AEAD' },
+                                    { label: 'Avg Wait', value: state.metrics.avgWaitTime ?? 0, color: '#B0B0B0' },
                                     { label: 'Throughput', value: state.metrics.throughput ?? 0, color: '#34d399' },
                                     { label: 'Switches', value: state.contextSwitches ?? 0, color: '#fbbf24' },
                                 ].map(({ label, value, color }) => (
