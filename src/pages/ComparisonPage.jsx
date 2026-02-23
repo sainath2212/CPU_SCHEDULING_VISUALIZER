@@ -107,7 +107,7 @@ export default function ComparisonPage() {
                     </div>
                     <div>
                         <h1 className="page-hero-title">Algorithm <GlowText color="#B0B0B0">Comparison</GlowText></h1>
-                        <p className="page-hero-subtitle">Run all 8 algorithms (including MLFQ) on the same workload</p>
+                        <p className="page-hero-subtitle">Run all 8 algorithms on the same workload</p>
                     </div>
                 </div>
 
