@@ -1,7 +1,3 @@
-/**
- * SimulatorPage — Main simulation interface with Aceternity 3D effects.
- */
-
 import { useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useProcesses } from '../context/ProcessContext';

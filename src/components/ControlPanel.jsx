@@ -61,8 +61,8 @@ export default function ControlPanel({
             <div className="control-divider" />
 
             <div className="control-section">
-                <span style={{ fontSize: '0.65rem', color: 'var(--color-kernel-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    Speed
+                <span style={{ fontSize: '0.65rem', color: 'var(--color-kernel-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <span>Speed</span>
                 </span>
                 <input
                     type="range"
@@ -73,6 +73,7 @@ export default function ControlPanel({
                     value={1550 - speed}
                     onChange={(e) => onSpeedChange(1550 - parseInt(e.target.value))}
                 />
+                <span style={{ color: 'var(--color-kernel-text)' }}>{Math.round((1550 - speed) / 15)}%</span>
             </div>
 
             {isCompleted && (
