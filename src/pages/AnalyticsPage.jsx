@@ -88,7 +88,16 @@ export default function AnalyticsPage() {
     const history = state.metricsHistory || [];
 
     return (
-        <div style={{ minHeight: '100vh', background: 'var(--color-kernel-bg-deep)', position: 'relative' }}>
+        <div className="analytics-spline-wrapper">
+            <iframe
+                className="spline-fixed-bg"
+                src="https://my.spline.design/retrofuturisticcircuitloop-0wz60jmzMj3Vao1n9QvdgJmd/"
+                frameBorder="0"
+                width="100%"
+                height="100%"
+            />
+
+            <div style={{ minHeight: '100vh', position: 'relative' }}>
             <DotGrid />
             <FloatingParticles count={6} />
 
@@ -177,6 +186,7 @@ export default function AnalyticsPage() {
                         </div>
                     )}
                 </div>
+            </div>
             </div>
         </div>
     );

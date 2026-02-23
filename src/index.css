@@ -244,7 +244,8 @@
   background: linear-gradient(180deg, var(--color-kernel-bg-deep), var(--color-kernel-bg));
 }
 
-.landing-spline-wrapper {
+.landing-spline-wrapper,
+.analytics-spline-wrapper {
   position: relative;
   min-height: 100vh;
   background: transparent;
@@ -260,6 +261,10 @@
   transform: scale(2.5);
   transform-origin: center center;
   z-index: 0;
+}
+
+.analytics-spline-wrapper .spline-fixed-bg {
+  transform: scale(1.7) translateY(8%);
 }
 
 .landing-spline-fullpage {
@@ -343,7 +348,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 2.5rem;
+  padding: 40px 40px;
   pointer-events: none;
 }
 
