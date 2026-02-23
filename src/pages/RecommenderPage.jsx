@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useProcesses } from '../context/ProcessContext';
-import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText } from '../components/AceternityUI';
+import { Card3D, SpotlightCard, DotGrid, FloatingParticles, GlowText, AnimatedBorderCard, AnimatedNumber } from '../components/AceternityUI';
 import { MagicButton } from '../components/MagicButton';
 
 const API = 'https://cpu-scheduling-visualizer-euxn.onrender.com/api/v2';
