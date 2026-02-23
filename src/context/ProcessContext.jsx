@@ -42,23 +42,25 @@ export function ProcessProvider({ children }) {
     }, []);
 
     const loadSampleProcesses = useCallback(() => {
-        const samples = [
-            { pid: 0, arrival: 0, burst: 7, priority: 2 },
-            { pid: 1, arrival: 2, burst: 4, priority: 1 },
-            { pid: 2, arrival: 4, burst: 1, priority: 3 },
-            { pid: 3, arrival: 5, burst: 4, priority: 2 },
-            { pid: 4, arrival: 7, burst: 6, priority: 1 },
-        ];
-        pidCounter.current = 5;
-        setMasterWorkload(samples);
-        setProcesses(samples.map(p => ({
+        const count = 5;
+        const newSamples = Array.from({ length: count }, () => {
+            const pid = pidCounter.current++;
+            return {
+                pid,
+                arrival: Math.floor(Math.random() * 10),
+                burst: Math.floor(Math.random() * 9) + 1,
+                priority: Math.floor(Math.random() * 5) + 1,
+            };
+        });
+        setMasterWorkload(prev => [...prev, ...newSamples]);
+        setProcesses(prev => [...prev, ...newSamples.map(p => ({
             ...p,
             remaining: p.burst,
             state: 'NEW',
             waitTime: 0,
             turnaroundTime: 0,
             responseTime: -1,
-        })));
+        }))]);
     }, []);
 
     /** Deep-copy master → processes. Called on algorithm switch or manual reset. */

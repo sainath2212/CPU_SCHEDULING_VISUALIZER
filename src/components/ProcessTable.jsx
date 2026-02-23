@@ -6,26 +6,7 @@
 const PROC_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 export default function ProcessTable({ processes, backendProcesses, runningPid, onRemove, disabled }) {
-    if (!processes || processes.length === 0) {
-        return (
-            <div className="card">
-                <div className="card-header">
-                    <h3 className="card-title">
-                        <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" />
-                        </svg>
-                        Process Table
-                    </h3>
-                </div>
-                <p style={{ color: 'var(--color-kernel-text-muted)', fontSize: '0.82rem', fontStyle: 'italic' }}>
-                    No processes added yet.
-                </p>
-            </div>
-        );
-    }
-
-    // Merge master + backend data
-    const merged = processes.map(mp => {
+    const merged = (processes || []).map(mp => {
         const bp = backendProcesses?.find(b => b.pid === mp.pid);
         return {
             pid: mp.pid,
@@ -69,7 +50,13 @@ export default function ProcessTable({ processes, backendProcesses, runningPid, 
                         </tr>
                     </thead>
                     <tbody>
-                        {merged.map(p => (
+                        {merged.length === 0 ? (
+                            <tr>
+                                <td colSpan="9" style={{ textAlign: 'center', color: 'var(--color-kernel-text-muted)', fontStyle: 'italic', fontFamily: 'var(--font-sans)', padding: '1.5rem 0' }}>
+                                    No processes added yet.
+                                </td>
+                            </tr>
+                        ) : merged.map(p => (
                             <tr key={p.pid} className={p.pid === runningPid ? 'row-running' : ''}>
                                 <td>
                                     <span className="process-id" style={{ backgroundColor: PROC_COLORS[p.pid % 8] }}>

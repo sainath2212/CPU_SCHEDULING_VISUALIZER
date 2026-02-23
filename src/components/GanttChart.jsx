@@ -2,11 +2,20 @@
  * GanttChart — Live visual timeline that grows per tick.
  */
 
+import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const PROC_COLORS = ['#E64833', '#90AEAD', '#874F41', '#FBE9D0', '#5ba3b5', '#d4956a', '#7ec8a0', '#c87e7e'];
 
 export default function GanttChart({ gantt, currentTime }) {
+    const scrollRef = useRef(null);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+        }
+    }, [gantt, currentTime]);
+
     if (!gantt || gantt.length === 0) {
         return (
             <div className="card">
@@ -46,7 +55,7 @@ export default function GanttChart({ gantt, currentTime }) {
                 </span>
             </div>
 
-            <div className="gantt-container">
+            <div className="gantt-container" ref={scrollRef}>
                 <div className="gantt-chart">
                     <div className="gantt-row">
                         <div className="gantt-label">CPU</div>

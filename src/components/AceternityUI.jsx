@@ -75,7 +75,7 @@ export function Card3D({ children, className = '', glowColor = 'rgba(230,72,51,0
    SPOTLIGHT CARD — Glowing border that follows cursor
    ═══════════════════════════════════════════════════════════════ */
 
-export function SpotlightCard({ children, className = '', spotlightColor = '#E64833' }) {
+export function SpotlightCard({ children, className = '', spotlightColor = '#E64833', style = {} }) {
     const divRef = useRef(null);
     const [pos, setPos] = useState({ x: 0, y: 0 });
     const [opacity, setOpacity] = useState(0);
@@ -101,6 +101,7 @@ export function SpotlightCard({ children, className = '', spotlightColor = '#E64
                 WebkitBackdropFilter: 'blur(20px)',
                 border: '1px solid rgba(144,174,173,0.18)',
                 borderRadius: '1rem',
+                ...style,
             }}
         >
             {/* Moving spotlight border */}
