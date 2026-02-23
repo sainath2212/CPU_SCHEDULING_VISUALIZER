@@ -1,50 +1,25 @@
 /**
- * Process Form Component
- * Form to add new processes with arrival time, burst time, and priority
+ * ProcessForm — Add processes manually or load samples.
+ * Uses ProcessContext callbacks. No emojis, kernel-themed.
  */
 
 import { useState } from 'react';
 
 export default function ProcessForm({ onAddProcess, onAddSample, disabled }) {
-    const [arrivalTime, setArrivalTime] = useState('');
-    const [burstTime, setBurstTime] = useState('');
+    const [arrival, setArrival] = useState('');
+    const [burst, setBurst] = useState('');
     const [priority, setPriority] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const arrival = parseInt(arrivalTime) || 0;
-        const burst = parseInt(burstTime) || 1;
-        const prio = parseInt(priority) || 1;
-
-        if (burst <= 0) {
-            alert('Burst time must be greater than 0');
-            return;
-        }
-
-        onAddProcess(arrival, burst, prio);
-
-        // Clear form
-        setArrivalTime('');
-        setBurstTime('');
+        const a = parseInt(arrival) || 0;
+        const b = parseInt(burst) || 1;
+        const p = parseInt(priority) || 1;
+        if (b <= 0) return;
+        onAddProcess(a, b, p);
+        setArrival('');
+        setBurst('');
         setPriority('');
-    };
-
-    const handleAddSample = () => {
-        // Generate 5 processes with randomized values
-        const count = 5;
-        const processes = [];
-        for (let i = 0; i < count; i++) {
-            processes.push({
-                arrivalTime: Math.floor(Math.random() * 21),   // 0 to 20
-                burstTime: Math.floor(Math.random() * 10) + 1, // 1 to 10
-                priority: Math.floor(Math.random() * 5) + 1,   // 1 to 5
-            });
-        }
-        // Sort by arrival time for cleaner display
-        processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
-        // Use batch add — no metrics calculated, just fills data
-        onAddSample(processes);
     };
 
     return (
@@ -64,64 +39,26 @@ export default function ProcessForm({ onAddProcess, onAddSample, disabled }) {
                 <div className="form-row">
                     <div className="form-group">
                         <label className="form-label">Arrival</label>
-                        <input
-                            type="number"
-                            className="form-input"
-                            value={arrivalTime}
-                            onChange={(e) => setArrivalTime(e.target.value)}
-                            placeholder="0"
-                            min="0"
-                            disabled={disabled}
-                        />
+                        <input type="number" className="form-input" value={arrival} onChange={e => setArrival(e.target.value)} placeholder="0" min="0" disabled={disabled} />
                     </div>
-
                     <div className="form-group">
                         <label className="form-label">Burst</label>
-                        <input
-                            type="number"
-                            className="form-input"
-                            value={burstTime}
-                            onChange={(e) => setBurstTime(e.target.value)}
-                            placeholder="1"
-                            min="1"
-                            disabled={disabled}
-                        />
+                        <input type="number" className="form-input" value={burst} onChange={e => setBurst(e.target.value)} placeholder="1" min="1" disabled={disabled} />
                     </div>
-
                     <div className="form-group">
                         <label className="form-label">Priority</label>
-                        <input
-                            type="number"
-                            className="form-input"
-                            value={priority}
-                            onChange={(e) => setPriority(e.target.value)}
-                            placeholder="1"
-                            min="1"
-                            disabled={disabled}
-                        />
+                        <input type="number" className="form-input" value={priority} onChange={e => setPriority(e.target.value)} placeholder="1" min="1" disabled={disabled} />
                     </div>
                 </div>
 
-                <div className="btn-group" style={{ marginTop: '8px' }}>
-                    <button
-                        type="submit"
-                        className="btn btn-primary"
-                        disabled={disabled}
-                        style={{ flex: 1 }}
-                    >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
+                <div className="btn-group" style={{ marginTop: '0.5rem' }}>
+                    <button type="submit" className="btn btn-primary" disabled={disabled} style={{ flex: 1 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
                         Add
                     </button>
-
-                    <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={handleAddSample}
-                        disabled={disabled}
-                    >
+                    <button type="button" className="btn btn-secondary" onClick={onAddSample} disabled={disabled}>
                         Sample
                     </button>
                 </div>
