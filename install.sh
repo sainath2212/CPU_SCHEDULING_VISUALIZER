@@ -70,13 +70,13 @@ check_python() {
 
 install_python_deps() {
     print_step "Configuring Python virtual environment and dependencies..."
-    if [ ! -d "backend/venv" ]; then
-        python3 -m venv backend/venv
+    if [ ! -d "api/venv" ]; then
+        python3 -m venv api/venv
         print_success "Virtual environment established."
     fi
 
-    source backend/venv/bin/activate
-    pip install -r backend/requirements.txt --quiet
+    source api/venv/bin/activate
+    pip install -r api/requirements.txt --quiet
     print_success "Python dependencies installed successfully."
 }
 
@@ -86,8 +86,8 @@ if [[ $TERMINAL_MODE -eq 1 ]]; then
     install_python_deps
 
     print_step "Starting terminal scheduler interface..."
-    source backend/venv/bin/activate
-    python3 backend/terminal_ui.py
+    source api/venv/bin/activate
+    python3 api/terminal_ui.py
     exit 0
 fi
 
@@ -127,8 +127,8 @@ print_step "Starting application servers..."
 print_step "Frontend available at: http://localhost:5173/"
 print_step "Backend API available at: http://localhost:5001/"
 
-source backend/venv/bin/activate
-python3 backend/app.py &
+source api/venv/bin/activate
+python3 api/index.py &
 FLASK_PID=$!
 
 trap "kill $FLASK_PID 2>/dev/null" EXIT

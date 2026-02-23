@@ -32,7 +32,7 @@ class SchedulerPredictor:
                 print(f"✅ AI model loaded from {self.model_path}")
             else:
                 print(f"⚠️  No trained model found at {self.model_path}")
-                print("   Run: python3 backend/ai/trainer.py to train one.")
+                print("   Run: python3 api/ai/trainer.py to train one.")
         except Exception as e:
             print(f"⚠️  Failed to load model: {e}")
 

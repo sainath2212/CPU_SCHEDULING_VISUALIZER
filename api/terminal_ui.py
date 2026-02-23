@@ -5,8 +5,8 @@ terminal_ui.py - Terminal-Based CPU Scheduling Visualizer
 Colored ASCII simulation in the terminal.
 
 Usage:
-    python3 backend/terminal_ui.py
-    python3 backend/terminal_ui.py -a 4 -q 2 -s -r
+    python3 api/terminal_ui.py
+    python3 api/terminal_ui.py -a 4 -q 2 -s -r
 """
 
 import argparse

@@ -1,6 +1,6 @@
 /**
  * TerminalPage — Embedded terminal using xterm.js.
- * Connects to a pseudo-terminal for running backend commands directly.
+ * Connects to a pseudo-terminal for running api commands directly.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -59,7 +59,7 @@ export default function TerminalPage() {
                 term.writeln('  \x1b[33mtrain\x1b[0m         — Train the AI model');
                 term.writeln('  \x1b[33mpredict\x1b[0m       — Predict best algorithm for current workload');
                 term.writeln('  \x1b[33mcompare\x1b[0m       — Compare all algorithms');
-                term.writeln('  \x1b[33mstatus\x1b[0m        — Show backend status');
+                term.writeln('  \x1b[33mstatus\x1b[0m        — Show api status');
                 term.writeln('  \x1b[33mclear\x1b[0m         — Clear terminal');
                 term.writeln('');
 
@@ -145,7 +145,7 @@ async function handleCommand(term, cmd) {
             break;
 
         case 'status': {
-            term.writeln('\x1b[33mChecking backend status...\x1b[0m');
+            term.writeln('\x1b[33mChecking api status...\x1b[0m');
             try {
                 const res = await fetch(`${API}/state`);
                 const data = await res.json();
@@ -156,15 +156,15 @@ async function handleCommand(term, cmd) {
                 term.writeln(`  Completed: \x1b[37m${data.isCompleted}\x1b[0m`);
             } catch {
                 term.writeln('\x1b[31m✗ Backend is OFFLINE\x1b[0m');
-                term.writeln('  Start with: python3 backend/app.py');
+                term.writeln('  Start with: python3 api/index.py');
             }
             break;
         }
 
         case 'train': {
             term.writeln('\x1b[33mTraining AI model...\x1b[0m');
-            term.writeln('This uses the trained model at backend/ai/model.joblib');
-            term.writeln('\x1b[36mTo retrain, run:\x1b[0m python3 backend/ai/trainer.py');
+            term.writeln('This uses the trained model at api/ai/model.joblib');
+            term.writeln('\x1b[36mTo retrain, run:\x1b[0m python3 api/ai/trainer.py');
             try {
                 const res = await fetch(`${API}/recommend`, {
                     method: 'POST',

@@ -5,7 +5,7 @@ Serves both the legacy v1 API (from scheduler.py) and the new v2 API
 powered by the kernel simulation engine.
 
 Run:
-    python3 backend/app.py
+    python3 api/app.py
 """
 
 import os
@@ -244,7 +244,7 @@ def v2_recommend():
     if not predictor.is_available():
         return jsonify({
             "ok": False,
-            "error": "AI model not trained yet. Run: python3 backend/ai/trainer.py",
+            "error": "AI model not trained yet. Run: python3 api/ai/trainer.py",
         }), 503
 
     result = predictor.predict(processes, quantum)

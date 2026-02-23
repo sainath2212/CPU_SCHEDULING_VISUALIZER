@@ -1,5 +1,5 @@
 # ================= CPU SCHEDULING ORCHESTRATOR =================
-# All algorithm implementations live in backend/algorithms/
+# All algorithm implementations live in api/algorithms/
 # This file wires them together for the tick-based API.
 
 import sys

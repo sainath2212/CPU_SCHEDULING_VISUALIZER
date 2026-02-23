@@ -36,7 +36,7 @@ The application utilizes a decoupled architecture communicating via a RESTful AP
 7. **LRTF** (Longest Remaining Time First) - Preemptive
 8. **MLFQ** (Multi-Level Feedback Queue) - Preemptive
 
-### Machine Learning Engine (`backend/ai/`)
+### Machine Learning Engine (`api/ai/`)
 The system includes an AI module capable of generating datasets, performing feature engineering, and training predictive models (`model.joblib`). This enables the platform to act as an intelligent scheduling advisor based on historical process parameters. A Jupyter notebook (`notebooks/ai_scheduler_analysis.ipynb`) is provided for detailed model analysis and training visualization.
 
 ---
@@ -54,11 +54,11 @@ chmod +x install.sh
 
 The script performs the following operations:
 1. Validates and installs required system dependencies (Node.js, Python 3).
-2. Provisions a Python virtual environment and installs backend packages from `requirements.txt`.
+2. Provisions a Python virtual environment and installs api packages from `requirements.txt`.
 3. Installs frontend Node dependencies via npm.
 4. Initializes the Flask API (port 5001) and Vite development server (port 3000/5173).
 
-To deploy the terminal-only backend version without the React frontend:
+To deploy the terminal-only api version without the React frontend:
 
 ```bash
 ./install.sh --terminal
@@ -74,10 +74,10 @@ npm run dev
 
 **Backend Initialization:**
 ```bash
-python3 -m venv backend/venv
-source backend/venv/bin/activate
-pip install -r backend/requirements.txt
-python3 backend/app.py
+python3 -m venv api/venv
+source api/venv/bin/activate
+pip install -r api/requirements.txt
+python3 api/index.py
 ```
 
 ---
