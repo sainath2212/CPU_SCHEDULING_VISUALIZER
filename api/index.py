@@ -257,4 +257,4 @@ if __name__ == "__main__":
     print("🚀 CPU Scheduler API running on http://localhost:5001")
     print("   v1 endpoints: /api/*")
     print("   v2 endpoints: /api/v2/*")
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5001)))
